@@ -1,0 +1,30 @@
+﻿@using Microsoft.AspNetCore.Http
+@using System.Net
+@using Nop.Core
+@inject IWebHelper webHelper
+@inject IHttpContextAccessor httpContextAccessor
+@model CustomerHeaderLinksModel
+@if (Model.DisplayBillToLink)
+{
+    <div class="customer-header-links">
+            @{
+
+                //var BillToList = new List<SelectListItem>();
+                //foreach (var BillTo in Model.BillTos)
+                //{
+                //    BillToList.Add(new SelectListItem { Text = BillTo.BillTo1,
+                //        Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeBillTo", new { BillToId = BillTo.Id }, webHelper.CurrentRequestProtocol), "returnurl", webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)),
+                //    });
+                //}
+                var BillToList = Model.BillTos.Select(x => new SelectListItem
+                {
+                    Text = x.BillTo1,
+                    Value = webHelper.ModifyQueryString(Url.RouteUrl("ChangeBillTo", new { BillToId = x.Id }, webHelper.CurrentRequestProtocol), "returnurl", webHelper.GetRawUrl(httpContextAccessor.HttpContext.Request)),
+                    Selected = x.Id.Equals(Model.CurrentBillToId)
+                });
+                //BillToList.Add(new SelectListItem { Text = "Select Address", Value = null, Selected = true });
+                <select id="customerBillTo" name="customerBillTo" asp-items="@BillToList" onchange="setLocation(this.value);" aria-label="@T("Currency.Selector.Label")"></select>
+            }
+    </div>
+}
+
