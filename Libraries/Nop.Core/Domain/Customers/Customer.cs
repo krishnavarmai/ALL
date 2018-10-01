@@ -139,6 +139,11 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public int? BillingAddressId { get; set; }
 
+        public int? BillingId { get; set; }
+
+        public int? ShippingId { get; set; }
+
+        public string PO_RefNo { get; set; }
         /// <summary>
         /// Gets or sets the shipping address identifier
         /// </summary>
@@ -199,6 +204,8 @@ namespace Nop.Core.Domain.Customers
         /// Default shipping address
         /// </summary>
         public virtual Address ShippingAddress { get; set; }
+
+        public virtual BillTo BillTo { get; set; }
 
         public virtual ShipTo ShipTo { get; set; }
         /// <summary>

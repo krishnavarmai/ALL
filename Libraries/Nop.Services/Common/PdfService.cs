@@ -930,37 +930,37 @@ namespace Nop.Services.Common
 
                 if (!order.PickUpInStore)
                 {
-                    if (order.ShippingAddress == null)
+                    if (order.ShipTo == null)
                         throw new NopException($"Shipping is required, but address is not available. Order ID = {order.Id}");
 
                     shippingAddress.AddCell(GetParagraph("PDFInvoice.ShippingInformation", lang, titleFont));
-                    if (!string.IsNullOrEmpty(order.ShippingAddress.Company))
-                        shippingAddress.AddCell(GetParagraph("PDFInvoice.Company", indent, lang, font, order.ShippingAddress.Company));
-                    shippingAddress.AddCell(GetParagraph("PDFInvoice.Name", indent, lang, font, order.ShippingAddress.FirstName + " " + order.ShippingAddress.LastName));
+                    if (!string.IsNullOrEmpty(order.ShipTo.Company))
+                        shippingAddress.AddCell(GetParagraph("PDFInvoice.Company", indent, lang, font, order.ShipTo.Company));
+                    shippingAddress.AddCell(GetParagraph("PDFInvoice.Name", indent, lang, font, order.ShipTo.FirstName + " " + order.ShipTo.LastName));
                     if (_addressSettings.PhoneEnabled)
-                        shippingAddress.AddCell(GetParagraph("PDFInvoice.Phone", indent, lang, font, order.ShippingAddress.PhoneNumber));
-                    if (_addressSettings.FaxEnabled && !string.IsNullOrEmpty(order.ShippingAddress.FaxNumber))
-                        shippingAddress.AddCell(GetParagraph("PDFInvoice.Fax", indent, lang, font, order.ShippingAddress.FaxNumber));
+                        shippingAddress.AddCell(GetParagraph("PDFInvoice.Phone", indent, lang, font, order.ShipTo.PhoneNumber));
+                    if (_addressSettings.FaxEnabled && !string.IsNullOrEmpty(order.ShipTo.FaxNumber))
+                        shippingAddress.AddCell(GetParagraph("PDFInvoice.Fax", indent, lang, font, order.ShipTo.FaxNumber));
                     if (_addressSettings.StreetAddressEnabled)
-                        shippingAddress.AddCell(GetParagraph("PDFInvoice.Address", indent, lang, font, order.ShippingAddress.Address1));
-                    if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(order.ShippingAddress.Address2))
-                        shippingAddress.AddCell(GetParagraph("PDFInvoice.Address2", indent, lang, font, order.ShippingAddress.Address2));
+                        shippingAddress.AddCell(GetParagraph("PDFInvoice.Address", indent, lang, font, order.ShipTo.Address1));
+                    if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(order.ShipTo.Address2))
+                        shippingAddress.AddCell(GetParagraph("PDFInvoice.Address2", indent, lang, font, order.ShipTo.Address2));
                     if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
                         _addressSettings.CountyEnabled || _addressSettings.ZipPostalCodeEnabled)
                     {
-                        var addressLine = $"{indent}{order.ShippingAddress.City}, " +
-                            $"{(!string.IsNullOrEmpty(order.ShippingAddress.County) ? $"{order.ShippingAddress.County}, " : string.Empty)}" +
-                            $"{(order.ShippingAddress.StateProvince != null ? _localizationService.GetLocalized(order.ShippingAddress.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
-                            $"{order.ShippingAddress.ZipPostalCode}";
+                        var addressLine = $"{indent}{order.ShipTo.City}, " +
+                            $"{(!string.IsNullOrEmpty(order.ShipTo.County) ? $"{order.ShipTo.County}, " : string.Empty)}" +
+                            $"{(order.ShipTo.StateProvince != null ? _localizationService.GetLocalized(order.ShipTo.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
+                            $"{order.ShipTo.ZipPostalCode}";
                         shippingAddress.AddCell(new Paragraph(addressLine, font));
                     }
 
-                    if (_addressSettings.CountryEnabled && order.ShippingAddress.Country != null)
+                    if (_addressSettings.CountryEnabled && order.ShipTo.Country != null)
                         shippingAddress.AddCell(
-                            new Paragraph(indent + _localizationService.GetLocalized(order.ShippingAddress.Country, x => x.Name, lang.Id), font));
+                            new Paragraph(indent + _localizationService.GetLocalized(order.ShipTo.Country, x => x.Name, lang.Id), font));
                     //custom attributes
                     var customShippingAddressAttributes =
-                        _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
+                        _addressAttributeFormatter.FormatAttributes(order.ShipTo.CustomAttributes);
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
                         //TODO: we should add padding to each line (in case if we have several custom address attributes)
@@ -1018,30 +1018,30 @@ namespace Nop.Services.Common
 
             billingAddress.AddCell(GetParagraph("PDFInvoice.BillingInformation", lang, titleFont));
 
-            if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(order.BillingAddress.Company))
-                billingAddress.AddCell(GetParagraph("PDFInvoice.Company", indent, lang, font, order.BillingAddress.Company));
+            if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(order.BillTo.Company))
+                billingAddress.AddCell(GetParagraph("PDFInvoice.Company", indent, lang, font, order.BillTo.Company));
 
-            billingAddress.AddCell(GetParagraph("PDFInvoice.Name", indent, lang, font, order.BillingAddress.FirstName + " " + order.BillingAddress.LastName));
+            billingAddress.AddCell(GetParagraph("PDFInvoice.Name", indent, lang, font, order.BillTo.FirstName + " " + order.BillTo.LastName));
             if (_addressSettings.PhoneEnabled)
-                billingAddress.AddCell(GetParagraph("PDFInvoice.Phone", indent, lang, font, order.BillingAddress.PhoneNumber));
-            if (_addressSettings.FaxEnabled && !string.IsNullOrEmpty(order.BillingAddress.FaxNumber))
-                billingAddress.AddCell(GetParagraph("PDFInvoice.Fax", indent, lang, font, order.BillingAddress.FaxNumber));
+                billingAddress.AddCell(GetParagraph("PDFInvoice.Phone", indent, lang, font, order.BillTo.PhoneNumber));
+            if (_addressSettings.FaxEnabled && !string.IsNullOrEmpty(order.BillTo.FaxNumber))
+                billingAddress.AddCell(GetParagraph("PDFInvoice.Fax", indent, lang, font, order.BillTo.FaxNumber));
             if (_addressSettings.StreetAddressEnabled)
-                billingAddress.AddCell(GetParagraph("PDFInvoice.Address", indent, lang, font, order.BillingAddress.Address1));
-            if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(order.BillingAddress.Address2))
-                billingAddress.AddCell(GetParagraph("PDFInvoice.Address2", indent, lang, font, order.BillingAddress.Address2));
+                billingAddress.AddCell(GetParagraph("PDFInvoice.Address", indent, lang, font, order.BillTo.Address1));
+            if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(order.BillTo.Address2))
+                billingAddress.AddCell(GetParagraph("PDFInvoice.Address2", indent, lang, font, order.BillTo.Address2));
             if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
                 _addressSettings.CountyEnabled || _addressSettings.ZipPostalCodeEnabled)
             {
-                var addressLine = $"{indent}{order.BillingAddress.City}, " +
-                    $"{(!string.IsNullOrEmpty(order.BillingAddress.County) ? $"{order.BillingAddress.County}, " : string.Empty)}" +
-                    $"{(order.BillingAddress.StateProvince != null ? _localizationService.GetLocalized(order.BillingAddress.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
-                    $"{order.BillingAddress.ZipPostalCode}";
+                var addressLine = $"{indent}{order.BillTo.City}, " +
+                    $"{(!string.IsNullOrEmpty(order.BillTo.County) ? $"{order.BillTo.County}, " : string.Empty)}" +
+                    $"{(order.BillTo.StateProvince != null ? _localizationService.GetLocalized(order.BillTo.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
+                    $"{order.BillTo.ZipPostalCode}";
                 billingAddress.AddCell(new Paragraph(addressLine, font));
             }
 
-            if (_addressSettings.CountryEnabled && order.BillingAddress.Country != null)
-                billingAddress.AddCell(new Paragraph(indent + _localizationService.GetLocalized(order.BillingAddress.Country, x => x.Name, lang.Id),
+            if (_addressSettings.CountryEnabled && order.BillTo.Country != null)
+                billingAddress.AddCell(new Paragraph(indent + _localizationService.GetLocalized(order.BillTo.Country, x => x.Name, lang.Id),
                     font));
 
             //VAT number
@@ -1050,7 +1050,7 @@ namespace Nop.Services.Common
 
             //custom attributes
             var customBillingAddressAttributes =
-                _addressAttributeFormatter.FormatAttributes(order.BillingAddress.CustomAttributes);
+                _addressAttributeFormatter.FormatAttributes(order.BillTo.CustomAttributes);
             if (!string.IsNullOrEmpty(customBillingAddressAttributes))
             {
                 //TODO: we should add padding to each line (in case if we have several custom address attributes)
@@ -1311,36 +1311,36 @@ namespace Nop.Services.Common
 
                 if (!order.PickUpInStore)
                 {
-                    if (order.ShippingAddress == null)
+                    if (order.ShipTo == null)
                         throw new NopException($"Shipping is required, but address is not available. Order ID = {order.Id}");
 
-                    if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(order.ShippingAddress.Company))
-                        addressTable.AddCell(GetParagraph("PDFPackagingSlip.Company", lang, font, order.ShippingAddress.Company));
+                    if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(order.ShipTo.Company))
+                        addressTable.AddCell(GetParagraph("PDFPackagingSlip.Company", lang, font, order.ShipTo.Company));
 
-                    addressTable.AddCell(GetParagraph("PDFPackagingSlip.Name", lang, font, order.ShippingAddress.FirstName + " " + order.ShippingAddress.LastName));
+                    addressTable.AddCell(GetParagraph("PDFPackagingSlip.Name", lang, font, order.ShipTo.FirstName + " " + order.ShipTo.LastName));
                     if (_addressSettings.PhoneEnabled)
-                        addressTable.AddCell(GetParagraph("PDFPackagingSlip.Phone", lang, font, order.ShippingAddress.PhoneNumber));
+                        addressTable.AddCell(GetParagraph("PDFPackagingSlip.Phone", lang, font, order.ShipTo.PhoneNumber));
                     if (_addressSettings.StreetAddressEnabled)
-                        addressTable.AddCell(GetParagraph("PDFPackagingSlip.Address", lang, font, order.ShippingAddress.Address1));
+                        addressTable.AddCell(GetParagraph("PDFPackagingSlip.Address", lang, font, order.ShipTo.Address1));
 
-                    if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(order.ShippingAddress.Address2))
-                        addressTable.AddCell(GetParagraph("PDFPackagingSlip.Address2", lang, font, order.ShippingAddress.Address2));
+                    if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(order.ShipTo.Address2))
+                        addressTable.AddCell(GetParagraph("PDFPackagingSlip.Address2", lang, font, order.ShipTo.Address2));
 
                     if (_addressSettings.CityEnabled || _addressSettings.StateProvinceEnabled ||
                         _addressSettings.CountyEnabled || _addressSettings.ZipPostalCodeEnabled)
                     {
-                        var addressLine = $"{order.ShippingAddress.City}, " +
-                            $"{(!string.IsNullOrEmpty(order.ShippingAddress.County) ? $"{order.ShippingAddress.County}, " : string.Empty)}" +
-                            $"{(order.ShippingAddress.StateProvince != null ? _localizationService.GetLocalized(order.ShippingAddress.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
-                            $"{order.ShippingAddress.ZipPostalCode}";
+                        var addressLine = $"{order.ShipTo.City}, " +
+                            $"{(!string.IsNullOrEmpty(order.ShipTo.County) ? $"{order.ShipTo.County}, " : string.Empty)}" +
+                            $"{(order.ShipTo.StateProvince != null ? _localizationService.GetLocalized(order.ShipTo.StateProvince, x => x.Name, lang.Id) : string.Empty)} " +
+                            $"{order.ShipTo.ZipPostalCode}";
                         addressTable.AddCell(new Paragraph(addressLine, font));
                     }
 
-                    if (_addressSettings.CountryEnabled && order.ShippingAddress.Country != null)
-                        addressTable.AddCell(new Paragraph(_localizationService.GetLocalized(order.ShippingAddress.Country, x => x.Name, lang.Id), font));
+                    if (_addressSettings.CountryEnabled && order.ShipTo.Country != null)
+                        addressTable.AddCell(new Paragraph(_localizationService.GetLocalized(order.ShipTo.Country, x => x.Name, lang.Id), font));
 
                     //custom attributes
-                    var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShippingAddress.CustomAttributes);
+                    var customShippingAddressAttributes = _addressAttributeFormatter.FormatAttributes(order.ShipTo.CustomAttributes);
                     if (!string.IsNullOrEmpty(customShippingAddressAttributes))
                     {
                         addressTable.AddCell(new Paragraph(HtmlHelper.ConvertHtmlToPlainText(customShippingAddressAttributes, true, true), font));

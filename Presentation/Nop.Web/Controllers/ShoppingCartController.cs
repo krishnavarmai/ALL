@@ -1280,7 +1280,7 @@ namespace Nop.Web.Controllers
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
             var model = new ShoppingCartModel();
-            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, billTo :_workContext.CurrentCustomer.BillingAddressId);
             return View(model);
         }
 
@@ -1339,7 +1339,7 @@ namespace Nop.Web.Controllers
 
             //prepare model
             var model = new ShoppingCartModel();
-            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, billTo: _workContext.CurrentCustomer.BillingAddressId);
 
             //update current warnings
             foreach (var warningItem in warnings.Where(warningItem => warningItem.Warnings.Any()))
@@ -1377,6 +1377,16 @@ namespace Nop.Web.Controllers
             //parse and save checkout attributes
             ParseAndSaveCheckoutAttributes(cart, form);
 
+            //Save Reference Number
+            string RefNumber = "";
+             RefNumber =  !string.IsNullOrEmpty(form["PO_RefNo"]) ? form["PO_RefNo"].ToString():"";
+            if(RefNumber.Length>25)
+            {
+                RefNumber = RefNumber.Substring(0, 25);
+            }
+            _workContext.CurrentCustomer.PO_RefNo = RefNumber;
+            _customerService.UpdateCustomer(_workContext.CurrentCustomer);
+
             //validate attributes
             var checkoutAttributes = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                 NopCustomerDefaults.CheckoutAttributes, _storeContext.CurrentStore.Id);
@@ -1385,7 +1395,7 @@ namespace Nop.Web.Controllers
             {
                 //something wrong, redisplay the page with warnings
                 var model = new ShoppingCartModel();
-                model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, validateCheckoutAttributes: true);
+                model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, validateCheckoutAttributes: true, billTo: _workContext.CurrentCustomer.BillingAddressId);
                 return View(model);
             }
 
@@ -1465,7 +1475,7 @@ namespace Nop.Web.Controllers
                 //empty coupon code
                 model.DiscountBox.Messages.Add(_localizationService.GetResource("ShoppingCart.DiscountCouponCode.WrongDiscount"));
 
-            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, billTo: _workContext.CurrentCustomer.BillingAddressId);
 
             return View(model);
         }
@@ -1518,7 +1528,7 @@ namespace Nop.Web.Controllers
                 model.GiftCardBox.IsApplied = false;
             }
 
-            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, billTo: _workContext.CurrentCustomer.BillingAddressId);
             return View(model);
         }
 
@@ -1578,7 +1588,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, billTo: _workContext.CurrentCustomer.BillingAddressId);
             return View(model);
         }
 
@@ -1601,7 +1611,7 @@ namespace Nop.Web.Controllers
                 .Where(sci => sci.ShoppingCartType == ShoppingCartType.ShoppingCart)
                 .LimitPerStore(_storeContext.CurrentStore.Id)
                 .ToList();
-            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart);
+            model = _shoppingCartModelFactory.PrepareShoppingCartModel(model, cart, billTo: _workContext.CurrentCustomer.BillingAddressId);
             return View(model);
         }
 
@@ -1836,6 +1846,7 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+   
         #endregion
     }
 }

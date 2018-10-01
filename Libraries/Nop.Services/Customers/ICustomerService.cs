@@ -69,14 +69,14 @@ namespace Nop.Services.Customers
         /// 
         /// </summary>
         /// <returns></returns>
-        IList<ShipTo> GetShipTos();
-        
-            /// <summary>
-            /// Gets a customer
-            /// </summary>
-            /// <param name="customerId">Customer identifier</param>
-            /// <returns>A customer</returns>
-            Customer GetCustomerById(int customerId);
+        IList<ShipTo> GetShipTos(int? billToId);
+
+        /// <summary>
+        /// Gets a customer
+        /// </summary>
+        /// <param name="customerId">Customer identifier</param>
+        /// <returns>A customer</returns>
+        Customer GetCustomerById(int customerId);
 
         /// <summary>
         /// Get customers by identifiers
@@ -231,6 +231,13 @@ namespace Nop.Services.Customers
         /// <returns>New coupon codes document</returns>
         void RemoveGiftCardCouponCode(Customer customer, string couponCode);
 
+        void UpdateCustomerBillTo(Customer customer, int? billTo);
+
+        IList<BillTo> GetBillTos();
+
+        IList<ShipTo> GetShipTos();
+
+        IList<ShipTo> GetShipTos(int BillToId);
         #endregion
 
         #region Customer roles

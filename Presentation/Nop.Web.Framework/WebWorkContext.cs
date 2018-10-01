@@ -44,7 +44,6 @@ namespace Nop.Web.Framework
         private readonly IVendorService _vendorService;
         private readonly LocalizationSettings _localizationSettings;
         private readonly TaxSettings _taxSettings;
-        private IList<ShipTo> _shipTos;
         private Customer _cachedCustomer;
         private Customer _originalCustomerIfImpersonated;
         private Vendor _cachedVendor;
@@ -83,7 +82,6 @@ namespace Nop.Web.Framework
             this._vendorService = vendorService;
             this._localizationSettings = localizationSettings;
             this._taxSettings = taxSettings;
-            this._shipTos = customerService.GetShipTos();
         }
 
         #endregion
@@ -538,9 +536,7 @@ namespace Nop.Web.Framework
         public virtual bool IsAdmin { get; set; }
         public virtual BillTo BillTo { get; set; }
 
-        public virtual IList<ShipTo> ShipTos {
-            get{ return _shipTos;  }
-        }
+        
         #endregion
     }
 }

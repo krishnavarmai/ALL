@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Orders;
 using Nop.Web.Models.Media;
 using Nop.Web.Models.ShoppingCart;
@@ -40,7 +41,8 @@ namespace Nop.Web.Factories
         ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model,
             IList<ShoppingCartItem> cart, bool isEditable = true,
             bool validateCheckoutAttributes = false,
-            bool prepareAndDisplayOrderReviewData = false);
+            bool prepareAndDisplayOrderReviewData = false,
+            int? billTo = null);
 
         /// <summary>
         /// Prepare the wishlist model

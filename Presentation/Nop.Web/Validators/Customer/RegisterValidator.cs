@@ -4,6 +4,7 @@ using FluentValidation;
 using Nop.Core;
 using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
+using Nop.Services.Common;
 using Nop.Services.Localization;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
@@ -13,7 +14,7 @@ namespace Nop.Web.Validators.Customer
     public partial class RegisterValidator : BaseNopValidator<RegisterModel>
     {
         public RegisterValidator(ILocalizationService localizationService, 
-            IStateProvinceService stateProvinceService,
+            IStateProvinceService stateProvinceService,IAddressService addressService,
             CustomerSettings customerSettings)
         {
             RuleFor(x => x.Email).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Email.Required"));
@@ -35,6 +36,17 @@ namespace Nop.Web.Validators.Customer
             RuleFor(x => x.FirstName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.FirstName.Required"));
             RuleFor(x => x.LastName).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.LastName.Required"));
 
+            RuleFor(x=>x.BillTo).Must((x, context) =>
+            {
+                //does selected country have states?
+                var BillTo = addressService.GetBillToByAddressNo(Convert.ToDecimal(x.BillTo));
+                if (BillTo>0)
+                {
+                    return true;
+                }
+
+                return false;
+            }).WithMessage("Bill To doesn't match with existing addresses.");
 
             RuleFor(x => x.Password).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Password.Required"));
             RuleFor(x => x.Password).Length(customerSettings.PasswordMinLength, 999).WithMessage(string.Format(localizationService.GetResource("Account.Fields.Password.LengthValidation"), customerSettings.PasswordMinLength));

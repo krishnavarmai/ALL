@@ -292,6 +292,9 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerAddressEdit", "customer/addressedit/{addressId:min(0)}",
 				new { controller = "Customer", action = "AddressEdit" });
 
+            routeBuilder.MapLocalizedRoute("CustomerBillToEdit", "customer/billtoedit/{BillToId:min(0)}",
+                new { controller = "Customer", action = "BillToEdit" });
+
             routeBuilder.MapLocalizedRoute("CustomerAddressAdd", "customer/addressadd",
 				new { controller = "Customer", action = "AddressAdd" });
 

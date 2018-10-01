@@ -53,6 +53,7 @@ Admin.Navigation = (function () {
 
     var init = function () {
         map = buildMap();
+        var result;
         $.ajax({
             cache: false,
             url: '/admin/plugin/SearchList',
@@ -61,8 +62,10 @@ Admin.Navigation = (function () {
             success: function (res) { result = res;}
         });
 
-        for (i = 0; i < result.length; i++) {
-            map[result[i].link] = result[i];
+        if (result !== undefined && result.length !== undefined) {
+            for (i = 0; i < result.length; i++) {
+                map[result[i].link] = result[i];
+            }
         }
     };
     var events = {};

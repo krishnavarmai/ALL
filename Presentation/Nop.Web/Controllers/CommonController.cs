@@ -11,6 +11,7 @@ using Nop.Core.Domain.Security;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
 using Nop.Services.Common;
+using Nop.Services.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -47,7 +48,8 @@ namespace Nop.Web.Controllers
         private readonly LocalizationSettings _localizationSettings;
         private readonly StoreInformationSettings _storeInformationSettings;
         private readonly VendorSettings _vendorSettings;
-        
+        private readonly ICustomerService _customerService;
+
         #endregion
         
         #region Ctor
@@ -66,6 +68,7 @@ namespace Nop.Web.Controllers
             IVendorService vendorService,
             IWorkContext workContext,
             IWorkflowMessageService workflowMessageService,
+            ICustomerService customerService,
             LocalizationSettings localizationSettings,
             StoreInformationSettings storeInformationSettings,
             VendorSettings vendorSettings)
@@ -87,6 +90,7 @@ namespace Nop.Web.Controllers
             this._localizationSettings = localizationSettings;
             this._storeInformationSettings = storeInformationSettings;
             this._vendorSettings = vendorSettings;
+            this._customerService = customerService;
         }
 
         #endregion
@@ -164,11 +168,19 @@ namespace Nop.Web.Controllers
         }
 
         [CheckAccessPublicStore(true)]
-        public virtual IActionResult SetBillTo(int? BillToId, string returnUrl = "")
+        public virtual IActionResult SetBillTo(int BillToId, string returnUrl = "")
         {
             var BillTo = _workContext.CurrentCustomer.BillTos.Where(billTo => billTo.Id == BillToId).FirstOrDefault();
             if (BillTo != null)
-                _workContext.BillTo = BillTo;
+            {
+                _customerService.UpdateCustomerBillTo(_workContext.CurrentCustomer, BillTo.Id);
+                _workContext.CurrentCustomer.BillingId = BillToId;
+            }
+            else
+            {
+                _customerService.UpdateCustomerBillTo(_workContext.CurrentCustomer, null);
+                _workContext.CurrentCustomer.BillingId = null;
+            }
 
             //home page
             if (string.IsNullOrEmpty(returnUrl))
@@ -181,14 +193,7 @@ namespace Nop.Web.Controllers
             return Redirect(returnUrl);
         }
 
-        [CheckAccessPublicStore(true)]
-        public virtual void SetShipTo(int? ShipToId, string returnUrl = "")
-        {
-            var ShipTo = _workContext.ShipTos.Where(shipTo => shipTo.Id == ShipToId).FirstOrDefault();
-            if (ShipTo != null)
-                _workContext.CurrentCustomer.ShipTo = ShipTo;
-           
-        }
+        
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]

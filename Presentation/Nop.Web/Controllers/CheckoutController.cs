@@ -948,6 +948,7 @@ namespace Nop.Web.Controllers
                 processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
+                processPaymentRequest.PO_RefNo = _workContext.CurrentCustomer.PO_RefNo;
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {
@@ -1341,11 +1342,12 @@ namespace Nop.Web.Controllers
                 if (shippingAddressId > 0)
                 {
                     //existing address
-                    var address = _workContext.CurrentCustomer.Addresses.FirstOrDefault(a => a.Id == shippingAddressId);
+                    var address = _customerService.GetShipTos().FirstOrDefault(a => a.Id == shippingAddressId);
                     if (address == null)
                         throw new Exception("Address can't be loaded");
 
-                    _workContext.CurrentCustomer.ShippingAddress = address;
+                    _workContext.CurrentCustomer.ShipTo = address;
+                    _workContext.CurrentCustomer.ShippingId = address.Id;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 }
                 else
@@ -1672,6 +1674,7 @@ namespace Nop.Web.Controllers
                 processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
                 processPaymentRequest.PaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
+                processPaymentRequest.PO_RefNo = _workContext.CurrentCustomer.PO_RefNo;
                 var placeOrderResult = _orderProcessingService.PlaceOrder(processPaymentRequest);
                 if (placeOrderResult.Success)
                 {

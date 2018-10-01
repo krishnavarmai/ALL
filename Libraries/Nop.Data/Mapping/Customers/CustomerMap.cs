@@ -27,6 +27,8 @@ namespace Nop.Data.Mapping.Customers
 
             builder.Property(customer => customer.BillingAddressId).HasColumnName("BillingAddress_Id");
             builder.Property(customer => customer.ShippingAddressId).HasColumnName("ShippingAddress_Id");
+            builder.Property(customer => customer.BillingId).HasColumnName("Billing_Id");
+            builder.Property(customer => customer.ShippingId).HasColumnName("Shipping_Id");
 
             builder.HasOne(customer => customer.BillingAddress)
                 .WithMany()
@@ -39,6 +41,7 @@ namespace Nop.Data.Mapping.Customers
             builder.Ignore(customer => customer.CustomerRoles);
             builder.Ignore(customer => customer.Addresses);
             builder.Ignore(customer => customer.BillTos);
+            builder.Ignore(customer => customer.BillTo);
             builder.Ignore(customer => customer.ShipTo);
             base.Configure(builder);
         }

@@ -172,10 +172,13 @@ namespace Nop.Services.Tests.Customers
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _customerRepo.Object,
+                null,
+                null,
                 _customerCustomerRoleMappingRepo.Object,
                 _customerPasswordRepo.Object,
                 _customerRoleRepo.Object,
                 _genericAttributeRepo.Object,
+                null,
                 null);
 
             _customerRegistrationService = new CustomerRegistrationService(_customerSettings,

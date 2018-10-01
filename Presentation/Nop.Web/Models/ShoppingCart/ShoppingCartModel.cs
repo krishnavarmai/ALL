@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
+using Nop.Core.Domain.Common;
 using Nop.Web.Framework.Models;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Media;
@@ -20,7 +21,7 @@ namespace Nop.Web.Models.ShoppingCart
 
             ButtonPaymentMethodViewComponentNames = new List<string>();
         }
-
+        public IList<ShipTo> shipTos { get; set; }
         public bool OnePageCheckoutEnabled { get; set; }
 
         public bool ShowSku { get; set; }
@@ -30,6 +31,7 @@ namespace Nop.Web.Models.ShoppingCart
         
         public IList<CheckoutAttributeModel> CheckoutAttributes { get; set; }
 
+        public string PO_RefNo { get; set; }
         public IList<string> Warnings { get; set; }
         public string MinOrderSubtotalWarning { get; set; }
         public bool DisplayTaxShippingInfo { get; set; }
@@ -44,6 +46,8 @@ namespace Nop.Web.Models.ShoppingCart
 
         public bool HideCheckoutButton { get; set; }
         public bool ShowVendorName { get; set; }
+
+        public string CurrentShipTo { get; set; }
 
         #region Nested Classes
 

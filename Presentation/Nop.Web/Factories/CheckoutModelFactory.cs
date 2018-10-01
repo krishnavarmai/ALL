@@ -9,6 +9,7 @@ using Nop.Core.Domain.Payments;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Plugins;
 using Nop.Services.Catalog;
+using Nop.Services.Customers;
 using Nop.Services.Common;
 using Nop.Services.Directory;
 using Nop.Services.Discounts;
@@ -46,6 +47,7 @@ namespace Nop.Web.Factories
         private readonly IStoreMappingService _storeMappingService;
         private readonly ITaxService _taxService;
         private readonly IWorkContext _workContext;
+        private readonly ICustomerService _customerService;
         private readonly OrderSettings _orderSettings;
         private readonly PaymentSettings _paymentSettings;
         private readonly RewardPointsSettings _rewardPointsSettings;
@@ -74,6 +76,7 @@ namespace Nop.Web.Factories
             IStoreMappingService storeMappingService,
             ITaxService taxService,
             IWorkContext workContext,
+            ICustomerService customerService,
             OrderSettings orderSettings,
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
@@ -102,6 +105,7 @@ namespace Nop.Web.Factories
             this._paymentSettings = paymentSettings;
             this._rewardPointsSettings = rewardPointsSettings;
             this._shippingSettings = shippingSettings;
+            this._customerService = customerService;
         }
 
         #endregion
@@ -238,19 +242,11 @@ namespace Nop.Web.Factories
             }
 
             //existing addresses
-            var addresses = _workContext.CurrentCustomer.Addresses
-                .Where(a => a.Country == null ||
-                    (//published
-                    a.Country.Published &&
-                    //allow shipping
-                    a.Country.AllowsShipping &&
-                    //enabled for the current store
-                    _storeMappingService.Authorize(a.Country)))
-                .ToList();
+            var addresses = _customerService.GetShipTos(_workContext.CurrentCustomer.BillingId);
             foreach (var address in addresses)
             {
                 var addressModel = new AddressModel();
-                _addressModelFactory.PrepareAddressModel(addressModel,
+                _addressModelFactory.PrepareShipToModel(addressModel,
                     address: address,
                     excludeProperties: false,
                     addressSettings: _addressSettings);
@@ -259,7 +255,7 @@ namespace Nop.Web.Factories
 
             //new address
             model.ShippingNewAddress.CountryId = selectedCountryId;
-            _addressModelFactory.PrepareAddressModel(model.ShippingNewAddress,
+            _addressModelFactory.PrepareShipToModel(model.ShippingNewAddress,
                 address: null,
                 excludeProperties: false,
                 addressSettings: _addressSettings,

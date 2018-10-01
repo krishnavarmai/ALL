@@ -33,6 +33,16 @@ namespace Nop.Web.Areas.Admin.Factories
         CustomerModel PrepareCustomerModel(CustomerModel model, Customer customer, bool excludeProperties = false);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="address"></param>
+        /// <param name="excludeProperties"></param>
+        /// <returns></returns>
+        CustomerAddressModel PrepareCustomerShipToModel(CustomerAddressModel model,
+            ShipTo address, bool excludeProperties = false);
+
+        /// <summary>
         /// Prepare paged reward points list model
         /// </summary>
         /// <param name="searchModel">Reward points search model</param>
@@ -58,15 +68,33 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Customer address model</returns>
         CustomerAddressModel PrepareCustomerAddressModel(CustomerAddressModel model,
             Customer customer, Address address, bool excludeProperties = false);
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="customer"></param>
+        /// <param name="address"></param>
+        /// <param name="excludeProperties"></param>
+        /// <returns></returns>
+        CustomerAddressModel PrepareCustomerBillToModel(CustomerAddressModel model,
+     Customer customer, BillTo address, bool excludeProperties = false);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="address"></param>
+        /// <param name="excludeProperties"></param>
+        /// <returns></returns>
+        CustomerAddressModel PrepareCustomerBillToModel(CustomerAddressModel model,
+            BillTo address, bool excludeProperties = false);
         /// <summary>
         /// Prepare paged customer order list model
         /// </summary>
         /// <param name="searchModel">Customer order search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Customer order list model</returns>
-        CustomerOrderListModel PrepareCustomerOrderListModel(CustomerOrderSearchModel searchModel, Customer customer);        
-        
+        CustomerOrderListModel PrepareCustomerOrderListModel(CustomerOrderSearchModel searchModel, Customer customer);
+
         /// <summary>
         /// Prepare paged customer shopping cart list model
         /// </summary>
@@ -83,7 +111,7 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="customer">Customer</param>
         /// <returns>Customer activity log list model</returns>
         CustomerActivityLogListModel PrepareCustomerActivityLogListModel(CustomerActivityLogSearchModel searchModel, Customer customer);
-        
+
         /// <summary>
         /// Prepare paged customer back in stock subscriptions list model
         /// </summary>
@@ -121,5 +149,43 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>GDPR request list model</returns>
         GdprLogListModel PrepareGdprLogListModel(GdprLogSearchModel searchModel);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchModel"></param>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        CustomerBillToListModel PrepareCustomerBillToListModel(CustomerAddressSearchModel searchModel, Customer customer);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchModel"></param>
+        /// <returns></returns>
+        CustomerAddressSearchModel PrepareBillToModel(CustomerAddressSearchModel searchModel);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchModel"></param>
+        /// <returns></returns>
+        CustomerAddressListModel PrepareCustomerBillToListModel(CustomerAddressSearchModel searchModel);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchModel"></param>
+        /// <returns></returns>
+        CustomerAddressSearchModel PrepareShipToModel(CustomerAddressSearchModel searchModel);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="searchModel"></param>
+        /// <returns></returns>
+        CustomerAddressListModel PrepareCustomerShipToListModel(CustomerAddressSearchModel searchModel);
+
+
+        
     }
 }

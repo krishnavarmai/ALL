@@ -344,11 +344,190 @@ namespace Nop.Web.Areas.Admin.Factories
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="address"></param>
+        protected virtual void PrepareAddressModel(AddressModel model, ShipTo address)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //set some of address fields as enabled and required
+            model.FirstNameEnabled = true;
+            model.FirstNameRequired = true;
+            model.LastNameEnabled = true;
+            model.LastNameRequired = true;
+            model.EmailEnabled = true;
+            model.EmailRequired = true;
+            model.CompanyEnabled = _addressSettings.CompanyEnabled;
+            model.CompanyRequired = _addressSettings.CompanyRequired;
+            model.CountryEnabled = _addressSettings.CountryEnabled;
+            model.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
+            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.CityEnabled = _addressSettings.CityEnabled;
+            model.CityRequired = _addressSettings.CityRequired;
+            model.CountyEnabled = _addressSettings.CountyEnabled;
+            model.CountyRequired = _addressSettings.CountyRequired;
+            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.PhoneEnabled = _addressSettings.PhoneEnabled;
+            model.PhoneRequired = _addressSettings.PhoneRequired;
+            model.FaxEnabled = _addressSettings.FaxEnabled;
+            model.FaxRequired = _addressSettings.FaxRequired;
+
+            //prepare available countries
+            _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
+
+            //prepare available states
+            _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
+
+            //prepare custom address attributes
+            _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.CustomAddressAttributes, address);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="address"></param>
+        protected virtual void PrepareAddressModel(AddressModel model, BillTo address)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            //set some of address fields as enabled and required
+            model.FirstNameEnabled = true;
+            model.FirstNameRequired = true;
+            model.LastNameEnabled = true;
+            model.LastNameRequired = true;
+            model.EmailEnabled = true;
+            model.EmailRequired = true;
+            model.CompanyEnabled = _addressSettings.CompanyEnabled;
+            model.CompanyRequired = _addressSettings.CompanyRequired;
+            model.CountryEnabled = _addressSettings.CountryEnabled;
+            model.CountryRequired = _addressSettings.CountryEnabled; //country is required when enabled
+            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.CityEnabled = _addressSettings.CityEnabled;
+            model.CityRequired = _addressSettings.CityRequired;
+            model.CountyEnabled = _addressSettings.CountyEnabled;
+            model.CountyRequired = _addressSettings.CountyRequired;
+            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.PhoneEnabled = _addressSettings.PhoneEnabled;
+            model.PhoneRequired = _addressSettings.PhoneRequired;
+            model.FaxEnabled = _addressSettings.FaxEnabled;
+            model.FaxRequired = _addressSettings.FaxRequired;
+
+            //prepare available countries
+            _baseAdminModelFactory.PrepareCountries(model.AvailableCountries);
+
+            //prepare available states
+            _baseAdminModelFactory.PrepareStatesAndProvinces(model.AvailableStates, model.CountryId);
+
+            //prepare custom address attributes
+            _addressAttributeModelFactory.PrepareCustomAddressAttributes(model.CustomAddressAttributes, address);
+        }
+        /// <summary>
         /// Prepare HTML string address
         /// </summary>
         /// <param name="model">Address model</param>
         /// <param name="address">Address</param>
         protected virtual void PrepareModelAddressHtml(AddressModel model, Address address)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var addressHtmlSb = new StringBuilder("<div>");
+
+            if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(model.Company))
+                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Company));
+
+            if (_addressSettings.StreetAddressEnabled && !string.IsNullOrEmpty(model.Address1))
+                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address1));
+
+            if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(model.Address2))
+                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address2));
+
+            if (_addressSettings.CityEnabled && !string.IsNullOrEmpty(model.City))
+                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.City));
+
+            if (_addressSettings.CountyEnabled && !string.IsNullOrEmpty(model.County))
+                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.County));
+
+            if (_addressSettings.StateProvinceEnabled && !string.IsNullOrEmpty(model.StateProvinceName))
+                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.StateProvinceName));
+
+            if (_addressSettings.ZipPostalCodeEnabled && !string.IsNullOrEmpty(model.ZipPostalCode))
+                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.ZipPostalCode));
+
+            if (_addressSettings.CountryEnabled && !string.IsNullOrEmpty(model.CountryName))
+                addressHtmlSb.AppendFormat("{0}", WebUtility.HtmlEncode(model.CountryName));
+
+            var customAttributesFormatted = _addressAttributeFormatter.FormatAttributes(address?.CustomAttributes);
+            if (!string.IsNullOrEmpty(customAttributesFormatted))
+            {
+                //already encoded
+                addressHtmlSb.AppendFormat("<br />{0}", customAttributesFormatted);
+            }
+
+            addressHtmlSb.Append("</div>");
+
+            model.AddressHtml = addressHtmlSb.ToString();
+        }
+
+        protected virtual void PrepareModelAddressHtml(AddressModel model, BillTo address)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var addressHtmlSb = new StringBuilder("<div>");
+
+            if (_addressSettings.CompanyEnabled && !string.IsNullOrEmpty(model.Company))
+                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Company));
+
+            if (_addressSettings.StreetAddressEnabled && !string.IsNullOrEmpty(model.Address1))
+                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address1));
+
+            if (_addressSettings.StreetAddress2Enabled && !string.IsNullOrEmpty(model.Address2))
+                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.Address2));
+
+            if (_addressSettings.CityEnabled && !string.IsNullOrEmpty(model.City))
+                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.City));
+
+            if (_addressSettings.CountyEnabled && !string.IsNullOrEmpty(model.County))
+                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.County));
+
+            if (_addressSettings.StateProvinceEnabled && !string.IsNullOrEmpty(model.StateProvinceName))
+                addressHtmlSb.AppendFormat("{0},", WebUtility.HtmlEncode(model.StateProvinceName));
+
+            if (_addressSettings.ZipPostalCodeEnabled && !string.IsNullOrEmpty(model.ZipPostalCode))
+                addressHtmlSb.AppendFormat("{0}<br />", WebUtility.HtmlEncode(model.ZipPostalCode));
+
+            if (_addressSettings.CountryEnabled && !string.IsNullOrEmpty(model.CountryName))
+                addressHtmlSb.AppendFormat("{0}", WebUtility.HtmlEncode(model.CountryName));
+
+            var customAttributesFormatted = _addressAttributeFormatter.FormatAttributes(address?.CustomAttributes);
+            if (!string.IsNullOrEmpty(customAttributesFormatted))
+            {
+                //already encoded
+                addressHtmlSb.AppendFormat("<br />{0}", customAttributesFormatted);
+            }
+
+            addressHtmlSb.Append("</div>");
+
+            model.AddressHtml = addressHtmlSb.ToString();
+        }
+
+        protected virtual void PrepareModelAddressHtml(AddressModel model, ShipTo address)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -557,6 +736,32 @@ namespace Nop.Web.Areas.Admin.Factories
 
             //prepare available customer roles
             _aclSupportedModelFactory.PrepareModelCustomerRoles(searchModel);
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        public virtual CustomerAddressSearchModel PrepareBillToModel(CustomerAddressSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            searchModel.CustomerId = 0;
+
+            //prepare page parameters
+            searchModel.SetGridPageSize();
+
+            return searchModel;
+        }
+
+        public virtual CustomerAddressSearchModel PrepareShipToModel(CustomerAddressSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            searchModel.CustomerId = 0;
 
             //prepare page parameters
             searchModel.SetGridPageSize();
@@ -843,6 +1048,95 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="searchModel">Customer address search model</param>
         /// <param name="customer">Customer</param>
         /// <returns>Customer address list model</returns>
+        public virtual CustomerBillToListModel PrepareCustomerBillToListModel(CustomerAddressSearchModel searchModel, Customer customer)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            //get customer addresses
+            var addresses = customer.BillTos
+                .OrderByDescending(address => address.CreatedOnUtc).ThenByDescending(address => address.Id).ToList();
+
+            //prepare list model
+            var model = new CustomerBillToListModel
+            {
+                Data = addresses.PaginationByRequestModel(searchModel).Select(address =>
+                {
+                    //fill in model values from the entity        
+                    var addressModel = address.ToModel<AddressModel>();
+
+                    //fill in additional values (not existing in the entity)
+                    PrepareModelAddressHtml(addressModel, address);
+
+                    return addressModel;
+                }),
+                Total = addresses.Count
+            };
+
+            return model;
+        }
+
+        public virtual CustomerAddressListModel PrepareCustomerBillToListModel(CustomerAddressSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+           
+            //get customer addresses
+            var addresses = _customerService.GetBillTos()
+                .OrderByDescending(address => address.CreatedOnUtc).ThenByDescending(address => address.Id).ToList();
+
+            //prepare list model
+            var model = new CustomerAddressListModel
+            {
+                Data = addresses.PaginationByRequestModel(searchModel).Select(address =>
+                {
+                    //fill in model values from the entity        
+                    var addressModel = address.ToModel<AddressModel>();
+
+                    //fill in additional values (not existing in the entity)
+                    PrepareModelAddressHtml(addressModel, address);
+
+                    return addressModel;
+                }),
+                Total = addresses.Count
+            };
+
+            return model;
+        }
+
+        public virtual CustomerAddressListModel PrepareCustomerShipToListModel(CustomerAddressSearchModel searchModel)
+        {
+            if (searchModel == null)
+                throw new ArgumentNullException(nameof(searchModel));
+
+
+            //get customer addresses
+            var addresses = _customerService.GetShipTos()
+                .OrderByDescending(address => address.CreatedOnUtc).ThenByDescending(address => address.Id).ToList();
+
+            //prepare list model
+            var model = new CustomerAddressListModel
+            {
+                Data = addresses.PaginationByRequestModel(searchModel).Select(address =>
+                {
+                    //fill in model values from the entity        
+                    var addressModel = address.ToModel<AddressModel>();
+
+                    //fill in additional values (not existing in the entity)
+                    PrepareModelAddressHtml(addressModel, address);
+
+                    return addressModel;
+                }),
+                Total = addresses.Count
+            };
+
+            return model;
+        }
+
         public virtual CustomerAddressListModel PrepareCustomerAddressListModel(CustomerAddressSearchModel searchModel, Customer customer)
         {
             if (searchModel == null)
@@ -873,7 +1167,6 @@ namespace Nop.Web.Areas.Admin.Factories
 
             return model;
         }
-
         /// <summary>
         /// Prepare customer address model
         /// </summary>
@@ -882,11 +1175,41 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <param name="address">Address</param>
         /// <param name="excludeProperties">Whether to exclude populating of some properties of model</param>
         /// <returns>Customer address model</returns>
-        public virtual CustomerAddressModel PrepareCustomerAddressModel(CustomerAddressModel model,
-            Customer customer, Address address, bool excludeProperties = false)
+        public virtual CustomerAddressModel PrepareCustomerBillToModel(CustomerAddressModel model,
+            Customer customer, BillTo billTo, bool excludeProperties = false)
         {
             if (customer == null)
                 throw new ArgumentNullException(nameof(customer));
+
+            if (billTo != null)
+            {
+                //fill in model values from the entity
+                model = model ?? new CustomerAddressModel();
+
+                //whether to fill in some of properties
+                if (!excludeProperties)
+                    model.Address = billTo.ToModel(model.Address);
+            }
+
+            model.CustomerId = customer.Id;
+
+            //prepare address model
+            PrepareAddressModel(model.Address, billTo);
+
+            return model;
+        }
+        /// <summary>
+        /// FoR
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="customer"></param>
+        /// <param name="address"></param>
+        /// <param name="excludeProperties"></param>
+        /// <returns></returns>
+        public virtual CustomerAddressModel PrepareCustomerBillToModel(CustomerAddressModel model,
+            BillTo address, bool excludeProperties = false)
+        {
+           
 
             if (address != null)
             {
@@ -898,7 +1221,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     model.Address = address.ToModel(model.Address);
             }
 
-            model.CustomerId = customer.Id;
+            model.CustomerId = 0;
 
             //prepare address model
             PrepareAddressModel(model.Address, address);
@@ -906,6 +1229,35 @@ namespace Nop.Web.Areas.Admin.Factories
             return model;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="address"></param>
+        /// <param name="excludeProperties"></param>
+        /// <returns></returns>
+        public virtual CustomerAddressModel PrepareCustomerShipToModel(CustomerAddressModel model,
+            ShipTo address, bool excludeProperties = false)
+        {
+
+
+            if (address != null)
+            {
+                //fill in model values from the entity
+                model = model ?? new CustomerAddressModel();
+
+                //whether to fill in some of properties
+                if (!excludeProperties)
+                    model.Address = address.ToModel(model.Address);
+            }
+
+            model.CustomerId = 0;
+
+            //prepare address model
+            PrepareAddressModel(model.Address, address);
+
+            return model;
+        }
         /// <summary>
         /// Prepare paged customer order list model
         /// </summary>
@@ -1234,6 +1586,11 @@ namespace Nop.Web.Areas.Admin.Factories
             };
 
             return model;
+        }
+
+        public CustomerAddressModel PrepareCustomerAddressModel(CustomerAddressModel model, Customer customer, Address address, bool excludeProperties = false)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

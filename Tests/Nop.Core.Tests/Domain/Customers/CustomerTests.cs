@@ -180,10 +180,13 @@ namespace Nop.Core.Tests.Domain.Customers
                 _eventPublisher.Object,
                 _genericAttributeService.Object,
                 _customerRepo.Object,
+                null,
+                null,
                 _customerCustomerRoleMappingRepo.Object,
                 _customerPasswordRepo.Object,
                 _customerRoleRepo.Object,
                 _genericAttributeRepo.Object,
+                null,
                 null);
 
             var customer = new TestCustomer();

@@ -209,6 +209,74 @@ namespace Nop.Web.Areas.Admin.Factories
             model.FaxRequired = _addressSettings.FaxRequired;
         }
 
+        protected virtual void PrepareAddressModel(AddressModel model, BillTo address)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.FormattedCustomAddressAttributes = _addressAttributeFormatter.FormatAttributes(address.CustomAttributes);
+
+            //set some of address fields as enabled and required
+            model.FirstNameEnabled = true;
+            model.FirstNameRequired = true;
+            model.LastNameEnabled = true;
+            model.LastNameRequired = true;
+            model.EmailEnabled = true;
+            model.EmailRequired = true;
+            model.CompanyEnabled = _addressSettings.CompanyEnabled;
+            model.CompanyRequired = _addressSettings.CompanyRequired;
+            model.CountryEnabled = _addressSettings.CountryEnabled;
+            model.CountryRequired = _addressSettings.CountryEnabled;
+            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.CountyEnabled = _addressSettings.CountyEnabled;
+            model.CountyRequired = _addressSettings.CountyRequired;
+            model.CityEnabled = _addressSettings.CityEnabled;
+            model.CityRequired = _addressSettings.CityRequired;
+            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.PhoneEnabled = _addressSettings.PhoneEnabled;
+            model.PhoneRequired = _addressSettings.PhoneRequired;
+            model.FaxEnabled = _addressSettings.FaxEnabled;
+            model.FaxRequired = _addressSettings.FaxRequired;
+        }
+        protected virtual void PrepareAddressModel(AddressModel model, ShipTo address)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            model.FormattedCustomAddressAttributes = _addressAttributeFormatter.FormatAttributes(address.CustomAttributes);
+
+            //set some of address fields as enabled and required
+            model.FirstNameEnabled = true;
+            model.FirstNameRequired = true;
+            model.LastNameEnabled = true;
+            model.LastNameRequired = true;
+            model.EmailEnabled = true;
+            model.EmailRequired = true;
+            model.CompanyEnabled = _addressSettings.CompanyEnabled;
+            model.CompanyRequired = _addressSettings.CompanyRequired;
+            model.CountryEnabled = _addressSettings.CountryEnabled;
+            model.CountryRequired = _addressSettings.CountryEnabled;
+            model.StateProvinceEnabled = _addressSettings.StateProvinceEnabled;
+            model.CountyEnabled = _addressSettings.CountyEnabled;
+            model.CountyRequired = _addressSettings.CountyRequired;
+            model.CityEnabled = _addressSettings.CityEnabled;
+            model.CityRequired = _addressSettings.CityRequired;
+            model.StreetAddressEnabled = _addressSettings.StreetAddressEnabled;
+            model.StreetAddressRequired = _addressSettings.StreetAddressRequired;
+            model.StreetAddress2Enabled = _addressSettings.StreetAddress2Enabled;
+            model.StreetAddress2Required = _addressSettings.StreetAddress2Required;
+            model.ZipPostalCodeEnabled = _addressSettings.ZipPostalCodeEnabled;
+            model.ZipPostalCodeRequired = _addressSettings.ZipPostalCodeRequired;
+            model.PhoneEnabled = _addressSettings.PhoneEnabled;
+            model.PhoneRequired = _addressSettings.PhoneRequired;
+            model.FaxEnabled = _addressSettings.FaxEnabled;
+            model.FaxRequired = _addressSettings.FaxRequired;
+        }
         /// <summary>
         /// Prepare order item models
         /// </summary>
@@ -475,8 +543,8 @@ namespace Nop.Web.Areas.Admin.Factories
                 throw new ArgumentNullException(nameof(order));
 
             //prepare billing address
-            model.BillingAddress = order.BillingAddress.ToModel(model.BillingAddress);
-            PrepareAddressModel(model.BillingAddress, order.BillingAddress);
+            model.BillingAddress = order.BillTo?.ToModel(model.BillingAddress);
+            PrepareAddressModel(model.BillingAddress, order.BillTo);
 
             if (order.AllowStoringCreditCardNumber)
             {
@@ -556,9 +624,9 @@ namespace Nop.Web.Areas.Admin.Factories
             model.PickUpInStore = order.PickUpInStore;
             if (!order.PickUpInStore)
             {
-                model.ShippingAddress = order.ShippingAddress.ToModel(model.ShippingAddress);
-                PrepareAddressModel(model.ShippingAddress, order.ShippingAddress);
-                model.ShippingAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode(order.ShippingAddress.Address1 + " " + order.ShippingAddress.ZipPostalCode + " " + order.ShippingAddress.City + " " + (order.ShippingAddress.Country != null ? order.ShippingAddress.Country.Name : ""))}";
+                model.ShippingAddress = order.ShipTo?.ToModel(model.ShippingAddress);
+                PrepareAddressModel(model.ShippingAddress, order.ShipTo);
+                model.ShippingAddressGoogleMapsUrl = $"https://maps.google.com/maps?f=q&hl=en&ie=UTF8&oe=UTF8&geocode=&q={WebUtility.UrlEncode(order.ShipTo.Address1 + " " + order.ShipTo.ZipPostalCode + " " + order.ShipTo.City + " " + (order.ShipTo.Country != null ? order.ShipTo.Country.Name : ""))}";
             }
             else
             {
@@ -913,8 +981,8 @@ namespace Nop.Web.Areas.Admin.Factories
                         OrderStatusId = order.OrderStatusId,
                         PaymentStatusId = order.PaymentStatusId,
                         ShippingStatusId = order.ShippingStatusId,
-                        CustomerEmail = order.BillingAddress.Email,
-                        CustomerFullName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}",
+                        CustomerEmail = order.BillTo?.Email,
+                        CustomerFullName = $"{order.BillTo?.FirstName} {order.BillTo?.LastName}",
                         CustomOrderNumber = order.CustomOrderNumber
                     };
 

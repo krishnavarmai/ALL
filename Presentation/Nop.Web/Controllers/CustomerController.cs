@@ -617,6 +617,14 @@ namespace Nop.Web.Controllers
                 var registrationResult = _customerRegistrationService.RegisterCustomer(registrationRequest);
                 if (registrationResult.Success)
                 {
+                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.BillingIdAttribute, Convert.ToDecimal(model.BillTo));
+                    var customerBillToMapping = new CustomerBillToMapping
+                    {
+                        BillToId = _addressService.GetBillToByAddressNo(Convert.ToDecimal(model.BillTo)),
+                        CustomerId = customer.Id
+                    };
+                    _addressService.InsertCustomerBillTo(customerBillToMapping);
+
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                     {

@@ -618,10 +618,10 @@ namespace Nop.Web.Factories
             };
 
             //billing info
-            var billingAddress = _workContext.CurrentCustomer.BillingAddress;
+            var billingAddress =_customerService.GetBillTos().FirstOrDefault(x=>x.Id==_workContext.CurrentCustomer.BillingId);
             if (billingAddress != null)
             {
-                _addressModelFactory.PrepareAddressModel(model.BillingAddress,
+                _addressModelFactory.PrepareBillToModel(model.BillingAddress,
                         address: billingAddress,
                         excludeProperties: false,
                         addressSettings: _addressSettings);
@@ -637,10 +637,11 @@ namespace Nop.Web.Factories
                 model.SelectedPickUpInStore = _shippingSettings.AllowPickUpInStore && pickupPoint != null;
                 if (!model.SelectedPickUpInStore)
                 {
-                    if (_workContext.CurrentCustomer.ShippingAddress != null)
+                    var shippingAddress = _customerService.GetShipTos().FirstOrDefault(x => x.Id == _workContext.CurrentCustomer.ShippingId);
+                    if (shippingAddress != null)
                     {
-                        _addressModelFactory.PrepareAddressModel(model.ShippingAddress,
-                            address: _workContext.CurrentCustomer.ShippingAddress,
+                        _addressModelFactory.PrepareShipToModel(model.ShippingAddress,
+                            address: shippingAddress,
                             excludeProperties: false,
                             addressSettings: _addressSettings);
                     }
@@ -797,7 +798,7 @@ namespace Nop.Web.Factories
         public virtual ShoppingCartModel PrepareShoppingCartModel(ShoppingCartModel model,
             IList<ShoppingCartItem> cart, bool isEditable = true,
             bool validateCheckoutAttributes = false,
-            bool prepareAndDisplayOrderReviewData = false)
+            bool prepareAndDisplayOrderReviewData = false, int? billTo = null)
         {
             if (cart == null)
                 throw new ArgumentNullException(nameof(cart));
@@ -892,7 +893,8 @@ namespace Nop.Web.Factories
             {
                 model.OrderReviewData = PrepareOrderReviewDataModel(cart);
             }
-
+            model.shipTos = _customerService.GetShipTos(_workContext.CurrentCustomer.BillingId);
+            model.PO_RefNo = _workContext.CurrentCustomer.PO_RefNo;
             return model;
         }
 

@@ -279,6 +279,7 @@ namespace Nop.Services.Tests.Orders
                 _vendorService.Object,
                 _webHelper.Object,
                 _workContext,
+                null,
                 _workflowMessageService.Object,
                 _localizationSettings,
                 _orderSettings,

@@ -30,5 +30,24 @@ namespace Nop.Web.Factories
             bool prePopulateWithCustomerFields = false,
             Customer customer = null,
             string overrideAttributesXml = "");
+
+
+        void PrepareShipToModel(AddressModel model,
+           ShipTo address, bool excludeProperties,
+           AddressSettings addressSettings,
+           Func<IList<Country>> loadCountries = null,
+           bool prePopulateWithCustomerFields = false,
+           Customer customer = null,
+           string overrideAttributesXml = "");
+
+        void PrepareBillToModel(AddressModel model,
+           BillTo address, bool excludeProperties,
+           AddressSettings addressSettings,
+           Func<IList<Country>> loadCountries = null,
+           bool prePopulateWithCustomerFields = false,
+           Customer customer = null,
+           string overrideAttributesXml = "");
+
+
     }
 }

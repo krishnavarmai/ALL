@@ -5,6 +5,7 @@
 @inject IWebHelper webHelper
 @inject IWorkContext workContext
 @inject OrderSettings orderSettings
+
 <div class="order-summary-content">
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore })
     @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
@@ -101,7 +102,7 @@
                                         else
                                         {
                                             <label class="td-title" for="removefromcart@(item.Id)">@T("ShoppingCart.Remove"):</label>
-                                            <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)"/>
+                                            <input type="checkbox" name="removefromcart" id="removefromcart@(item.Id)" value="@(item.Id)" />
                                         }
                                     </td>
                                 }
@@ -184,7 +185,7 @@
                                         }
                                         else
                                         {
-                                            <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input"/>
+                                            <input name="itemquantity@(item.Id)" id="itemquantity@(item.Id)" type="text" value="@(item.Quantity)" class="qty-input" />
                                         }
                                     }
                                     else
@@ -240,15 +241,14 @@
                 @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryCartFooter })
                 @if (Model.IsEditable)
                 {
-                <div class="cart-collaterals">
-                    <div class="deals">
-                        @await Html.PartialAsync("_DiscountBox", Model.DiscountBox)
-                        @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
-                        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals })
+                    <div class="cart-collaterals">
+                        <div class="deals">
+                            @await Html.PartialAsync("_DiscountBox", Model.DiscountBox)
+                            @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
+                            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals })
+                        </div>
+                        
                     </div>
-                    @await Component.InvokeAsync("ShippingAddress")
-                    @await Component.InvokeAsync("EstimateShipping")
-                </div>
                 }
                 <div class="totals">
                     @await Component.InvokeAsync("OrderTotals", new { isEditable = Model.IsEditable })
@@ -292,41 +292,43 @@
                                 }
                             </div>
                         }
-                        <div class="checkout-buttons">
-                            @if (string.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
-                            {
-                                <script asp-location="Footer">
-                                    $(document).ready(function () {
-                                        $('#checkout').on('click', function () {
-                                            //terms of service
-                                            var termOfServiceOk = true;
-                                            if ($('#termsofservice').length > 0) {
-                                                //terms of service element exists
-                                                if (!$('#termsofservice').is(':checked')) {
-                                                    $("#terms-of-service-warning-box").dialog();
-                                                    termOfServiceOk = false;
-                                                } else {
-                                                    termOfServiceOk = true;
+                            <div class="checkout-buttons">
+                                <input type="text" name="PO_RefNo" id="PO_RefNo" value="@Model.PO_RefNo" /><br />
+                                @if (string.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
+                                {
+                                    <script asp-location="Footer">
+                                        $(document).ready(function () {
+                                            $('#checkout').on('click', function () {
+                                                //terms of service
+                                                var termOfServiceOk = true;
+                                                if ($('#termsofservice').length > 0) {
+                                                    //terms of service element exists
+                                                    if (!$('#termsofservice').is(':checked')) {
+                                                        $("#terms-of-service-warning-box").dialog();
+                                                        termOfServiceOk = false;
+                                                    } else {
+                                                        termOfServiceOk = true;
+                                                    }
                                                 }
-                                            }
-                                            return termOfServiceOk;
+                                                return termOfServiceOk;
+                                            });
                                         });
-                                    });
-                                </script>
-                                if (orderSettings.CheckoutDisabled)
-                                {
-                                    <div class="checkout-disabled">
-                                        @T("Checkout.Disabled")
-                                    </div>
+                                    </script>
+                                    if (orderSettings.CheckoutDisabled)
+                                    {
+                                        <div class="checkout-disabled">
+                                            @T("Checkout.Disabled")
+                                        </div>
+                                    }
+                                    else
+                                    {
+
+                                        <button type="submit" id="checkout" name="checkout" value="checkout" class="button-1 checkout-button">
+                                            @T("Checkout.Button")
+                                        </button>
+                                    }
                                 }
-                                else
-                                {
-                                    <button type="submit" id="checkout" name="checkout" value="checkout" class="button-1 checkout-button">
-                                        @T("Checkout.Button")
-                                    </button>
-                                }
-                            }
-                        </div>
+                            </div>
                         <div class="addon-buttons">
                             @*Payment method buttons (e.g. GoogleCheckoutButton, Paypal Express)*@
                             @foreach (var pm in Model.ButtonPaymentMethodViewComponentNames)

@@ -51,5 +51,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// <returns>Customer attribute value model</returns>
         CustomerAttributeValueModel PrepareCustomerAttributeValueModel(CustomerAttributeValueModel model,
             CustomerAttribute customerAttribute, CustomerAttributeValue customerAttributeValue, bool excludeProperties = false);
+
     }
 }

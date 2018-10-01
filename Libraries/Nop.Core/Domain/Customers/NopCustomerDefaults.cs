@@ -261,6 +261,8 @@ namespace Nop.Core.Domain.Customers
         /// </summary>
         public static string TaxDisplayTypeIdAttribute => "TaxDisplayTypeId";
 
+        public static string BillingIdAttribute => "BilingId";
+
         /// <summary>
         /// Gets a name of generic attribute to store the value of 'UseRewardPointsDuringCheckout'
         /// </summary>

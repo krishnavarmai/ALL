@@ -83,6 +83,8 @@ namespace Nop.Web.Models.Customer
         [NopResourceDisplayName("Account.Fields.Company")]
         public string Company { get; set; }
 
+        public double BillTo { get; set; }
+
         public bool StreetAddressEnabled { get; set; }
         public bool StreetAddressRequired { get; set; }
         [NopResourceDisplayName("Account.Fields.StreetAddress")]

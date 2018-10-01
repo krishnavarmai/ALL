@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using Nop.Core;
 using Nop.Core.Caching;
+using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Directory;
@@ -33,6 +34,8 @@ namespace Nop.Services.Catalog
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
         private readonly ShoppingCartSettings _shoppingCartSettings;
+        private readonly IRepository<CategoryCodeDiscounts> _CategoryCodeDiscountsRepository;
+        private readonly IRepository<BillToShipToMapping> _BillToShipToMappingRepository;
 
         #endregion
 
@@ -49,6 +52,8 @@ namespace Nop.Services.Catalog
             IStaticCacheManager cacheManager,
             IStoreContext storeContext,
             IWorkContext workContext,
+            IRepository<CategoryCodeDiscounts> CategoryCodeDiscountsRepository,
+            IRepository<BillToShipToMapping> BillToShipToMappingRepository,
             ShoppingCartSettings shoppingCartSettings)
         {
             this._catalogSettings = catalogSettings;
@@ -63,6 +68,8 @@ namespace Nop.Services.Catalog
             this._storeContext = storeContext;
             this._workContext = workContext;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._CategoryCodeDiscountsRepository = CategoryCodeDiscountsRepository;
+            this._BillToShipToMappingRepository = BillToShipToMappingRepository;
         }
 
         #endregion
@@ -535,71 +542,104 @@ namespace Nop.Services.Catalog
             discountAmount = decimal.Zero;
             appliedDiscounts = new List<DiscountForCaching>();
 
-            decimal finalPrice;
-
-            var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
-            if (combination?.OverriddenPrice.HasValue ?? false)
+            decimal finalPrice =product.Price;
+            decimal discount = 0;
+            string CahekeyKey = "Bill:" + customer.BillingId?.ToString() + "Product:" + product.ManufacturerPartNumber?.ToString();
+            if (customer.BillingId != null)
             {
-                finalPrice = GetFinalPrice(product,
-                        customer,
-                        combination.OverriddenPrice.Value,
-                        decimal.Zero,
-                        includeDiscounts,
-                        quantity,
-                        product.IsRental ? rentalStartDate : null,
-                        product.IsRental ? rentalEndDate : null,
-                        out discountAmount, out appliedDiscounts);
+                discount = _cacheManager.Get(CahekeyKey, () =>
+                { 
+                var query = from pp in _CategoryCodeDiscountsRepository.Table
+                            join ShipTos in _BillToShipToMappingRepository.Table on customer.BillingId equals ShipTos.BillToId
+                            where pp.ShipTo == ShipTos.ShipToId
+                            where pp.CategoryCode == product.ManufacturerPartNumber
+                            select pp.DiscountValue;
+                var disc = query.FirstOrDefault().ToString();
+
+                decimal.TryParse(disc, out discount);
+                return discount;
+                }
+            , 60);
+
+            
+                //string discount =  _CategoryCodeDiscountsRepository.Table
+                
+            }
+            if (discount < 0)
+            {
+                finalPrice = finalPrice - (finalPrice * (discount/100) * (-1));
             }
             else
             {
-                //summarize price of all attributes
-                var attributesTotalPrice = decimal.Zero;
-                var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
-                if (attributeValues != null)
-                {
-                    foreach (var attributeValue in attributeValues)
-                    {
-                        attributesTotalPrice += GetProductAttributeValuePriceAdjustment(attributeValue, customer, product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null);
-                    }
-                }
-
-                //get price of a product (with previously calculated price of all attributes)
-                if (product.CustomerEntersPrice)
-                {
-                    finalPrice = customerEnteredPrice;
-                }
-                else
-                {
-                    int qty;
-                    if (_shoppingCartSettings.GroupTierPricesForDistinctShoppingCartItems)
-                    {
-                        //the same products with distinct product attributes could be stored as distinct "ShoppingCartItem" records
-                        //so let's find how many of the current products are in the cart
-                        qty = customer.ShoppingCartItems
-                            .Where(x => x.ProductId == product.Id)
-                            .Where(x => x.ShoppingCartType == shoppingCartType)
-                            .Sum(x => x.Quantity);
-                        if (qty == 0)
-                        {
-                            qty = quantity;
-                        }
-                    }
-                    else
-                    {
-                        qty = quantity;
-                    }
-
-                    finalPrice = GetFinalPrice(product,
-                        customer,
-                        attributesTotalPrice,
-                        includeDiscounts,
-                        qty,
-                        product.IsRental ? rentalStartDate : null,
-                        product.IsRental ? rentalEndDate : null,
-                        out discountAmount, out appliedDiscounts);
-                }
+                finalPrice = finalPrice + (finalPrice * (discount / 100));
             }
+            #region Commentcode
 
+            //COmmENT
+            //var combination = _productAttributeParser.FindProductAttributeCombination(product, attributesXml);
+            //if (combination?.OverriddenPrice.HasValue ?? false)
+            //{
+            //    finalPrice = GetFinalPrice(product,
+            //            customer,
+            //            combination.OverriddenPrice.Value,
+            //            decimal.Zero,
+            //            includeDiscounts,
+            //            quantity,
+            //            product.IsRental ? rentalStartDate : null,
+            //            product.IsRental ? rentalEndDate : null,
+            //            out discountAmount, out appliedDiscounts);
+            //}
+            //else
+            //{
+            //    //summarize price of all attributes
+            //    var attributesTotalPrice = decimal.Zero;
+            //    var attributeValues = _productAttributeParser.ParseProductAttributeValues(attributesXml);
+            //    if (attributeValues != null)
+            //    {
+            //        foreach (var attributeValue in attributeValues)
+            //        {
+            //            attributesTotalPrice += GetProductAttributeValuePriceAdjustment(attributeValue, customer, product.CustomerEntersPrice ? (decimal?)customerEnteredPrice : null);
+            //        }
+            //    }
+
+            //    //get price of a product (with previously calculated price of all attributes)
+            //    if (product.CustomerEntersPrice)
+            //    {
+            //        finalPrice = customerEnteredPrice;
+            //    }
+            //    else
+            //    {
+            //        int qty;
+            //        if (_shoppingCartSettings.GroupTierPricesForDistinctShoppingCartItems)
+            //        {
+            //            //the same products with distinct product attributes could be stored as distinct "ShoppingCartItem" records
+            //            //so let's find how many of the current products are in the cart
+            //            qty = customer.ShoppingCartItems
+            //                .Where(x => x.ProductId == product.Id)
+            //                .Where(x => x.ShoppingCartType == shoppingCartType)
+            //                .Sum(x => x.Quantity);
+            //            if (qty == 0)
+            //            {
+            //                qty = quantity;
+            //            }
+            //        }
+            //        else
+            //        {
+            //            qty = quantity;
+            //        }
+
+            //        finalPrice = GetFinalPrice(product,
+            //            customer,
+            //            attributesTotalPrice,
+            //            includeDiscounts,
+            //            qty,
+            //            product.IsRental ? rentalStartDate : null,
+            //            product.IsRental ? rentalEndDate : null,
+            //            out discountAmount, out appliedDiscounts);
+            //    }
+            //}
+            //COmmENT
+            #endregion
             //rounding
             if (_shoppingCartSettings.RoundPricesDuringCalculation)
                 finalPrice = this.RoundPrice(finalPrice);
@@ -846,6 +886,7 @@ namespace Nop.Services.Catalog
 
             return rez;
         }
+      
 
         #endregion
     }

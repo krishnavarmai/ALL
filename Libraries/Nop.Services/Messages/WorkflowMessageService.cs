@@ -707,8 +707,8 @@ namespace Nop.Services.Messages
                 //event notification
                 _eventPublisher.MessageTokensAdded(messageTemplate, tokens);
 
-                var toEmail = order.BillingAddress.Email;
-                var toName = $"{order.BillingAddress.FirstName} {order.BillingAddress.LastName}";
+                var toEmail = order.BillTo.Email;
+                var toName = $"{order.BillTo.FirstName} {order.BillTo.LastName}";
 
                 return SendNotification(messageTemplate, emailAccount, languageId, tokens, toEmail, toName,
                     attachmentFilePath, attachmentFileName);

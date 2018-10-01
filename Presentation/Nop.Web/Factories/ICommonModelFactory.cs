@@ -112,10 +112,6 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>Robots.txt file as string</returns>
         string PrepareRobotsTextFile();
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        ShippingAddressModel PrepareShippingAddressModel();
+        
     }
 }

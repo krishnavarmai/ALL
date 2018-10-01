@@ -50,7 +50,6 @@ namespace Nop.Core
 
         BillTo BillTo { get; set; }
 
-        IList<ShipTo> ShipTos { get; }
         
     }
 }

@@ -35,6 +35,8 @@ namespace Nop.Services.Customers
         private readonly IGenericAttributeService _genericAttributeService;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<ShipTo> _shipToRepository;
+        private readonly IRepository<BillTo> _billToRepository;
+        private readonly IRepository<BillToShipToMapping> _BillToShipToRepository;
         private readonly IRepository<CustomerCustomerRoleMapping> _customerCustomerRoleMappingRepository;
         private readonly IRepository<CustomerPassword> _customerPasswordRepository;
         private readonly IRepository<CustomerRole> _customerRoleRepository;
@@ -54,10 +56,12 @@ namespace Nop.Services.Customers
             IGenericAttributeService genericAttributeService,
             IRepository<Customer> customerRepository,
             IRepository<ShipTo> shipToRepository,
+            IRepository<BillTo> billToRepository,
             IRepository<CustomerCustomerRoleMapping> customerCustomerRoleMappingRepository,
             IRepository<CustomerPassword> customerPasswordRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<GenericAttribute> gaRepository,
+            IRepository<BillToShipToMapping> billToShipToRepository,
             IStaticCacheManager staticCacheManager)
         {
             this._customerSettings = customerSettings;
@@ -74,6 +78,8 @@ namespace Nop.Services.Customers
             this._staticCacheManager = staticCacheManager;
             this._entityName = typeof(Customer).Name;
             this._shipToRepository = shipToRepository;
+            this._billToRepository = billToRepository;
+            this._BillToShipToRepository = billToShipToRepository;
         }
 
         #endregion
@@ -277,9 +283,16 @@ namespace Nop.Services.Customers
             return customers;
         }
 
-        public virtual IList<ShipTo> GetShipTos()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="billToId"></param>
+        /// <returns></returns>
+        public virtual IList<ShipTo> GetShipTos(int? billToId)
         {
             var query = from c in _shipToRepository.Table
+                        join bs in _BillToShipToRepository.Table on c.Id equals bs.ShipToId
+                        where bs.BillToId == billToId
                         select c;
             var shipTos = query.ToList();
             
@@ -352,6 +365,34 @@ namespace Nop.Services.Customers
             return sortedCustomers;
         }
 
+        public virtual IList<BillTo> GetBillTos()
+        {
+            var query = from b in _billToRepository.Table
+                        orderby b.Id
+                        select b;
+            var billTos = query.ToList();
+            return billTos;
+        }
+
+        public virtual IList<ShipTo> GetShipTos()
+        {
+            var query = from s in _shipToRepository.Table
+                        orderby s.Id
+                        select s;
+            var shipTos = query.ToList();
+            return shipTos;
+        }
+
+        public virtual IList<ShipTo> GetShipTos(int BillToId)
+        {
+            var query = from s in _shipToRepository.Table
+                        join bs in _BillToShipToRepository.Table on s.Id equals bs.ShipToId
+                        where bs.BillToId == BillToId
+                        orderby s.Id
+                        select s;
+            var shipTos = query.ToList();
+            return shipTos;
+        }
         /// <summary>
         /// Gets a customer by GUID
         /// </summary>
@@ -598,6 +639,16 @@ namespace Nop.Services.Customers
             //customer.Addresses.Remove(address);
             customer.CustomerAddressMappings
                 .Remove(customer.CustomerAddressMappings.FirstOrDefault(mapping => mapping.AddressId == address.Id));
+        }
+
+        public virtual void UpdateCustomerBillTo(Customer customer,int? billTo)
+        {
+            if (customer == null)
+                throw new ArgumentNullException(nameof(customer));
+
+            customer.BillingId = billTo;
+            _customerRepository.Update(customer);
+            
         }
 
         /// <summary>

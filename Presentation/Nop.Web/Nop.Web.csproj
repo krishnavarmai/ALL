@@ -49,10 +49,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Shared\Components\CustomerHeaderLinks\Default.cshtml">
+    <Content Update="Areas\Admin\Views\Customer\ShipToList.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
-    <Content Update="Views\Shared\Components\ShippingAddress\Default.cshtml">
+    <Content Update="Areas\Admin\Views\Customer\BillToList.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
+    <Content Update="Views\Shared\Components\CustomerHeaderLinks\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
   </ItemGroup>

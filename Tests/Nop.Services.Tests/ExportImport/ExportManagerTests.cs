@@ -422,7 +422,7 @@ namespace Nop.Services.Tests.ExportImport
             //not exported fields
             ignore.AddRange(new[]
             {
-                "BillingAddressId", "ShippingAddressId", "PickupAddressId", "CustomerTaxDisplayTypeId",
+               "BillingId", "ShippingId", "BillTo", "ShipTo", "BillingAddressId", "ShippingAddressId", "PickupAddressId", "CustomerTaxDisplayTypeId",
                 "RewardPointsHistoryEntryId", "CheckoutAttributeDescription", "CheckoutAttributesXml",
                 "CustomerLanguageId", "CustomerIp", "AllowStoringCreditCardNumber", "CardType", "CardName",
                 "CardNumber", "MaskedCreditCardNumber", "CardCvv2", "CardExpirationMonth", "CardExpirationYear",
@@ -536,10 +536,10 @@ namespace Nop.Services.Tests.ExportImport
             var customer = customers.First();
 
             var ignore = new List<string> { "Id", "ExternalAuthenticationRecords", "CustomerRoles", "ShoppingCartItems",
-                "ReturnRequests", "BillingAddress", "ShippingAddress", "Addresses", "AdminComment",
+                "ReturnRequests", "BillingAddress", "ShippingAddress","BillTo", "ShipTo","BillTos","CustomerBillToMappings", "Addresses", "AdminComment",
                 "EmailToRevalidate", "HasShoppingCartItems", "RequireReLogin", "FailedLoginAttempts",
                 "CannotLoginUntilDateUtc", "Deleted", "IsSystemAccount", "SystemName", "LastIpAddress",
-                "LastLoginDateUtc", "LastActivityDateUtc", "RegisteredInStoreId", "BillingAddressId", "ShippingAddressId", 
+                "LastLoginDateUtc", "LastActivityDateUtc", "RegisteredInStoreId", "BillingAddressId","BillingId","ShippingId", "ShippingAddressId", 
                 "CustomerCustomerRoleMappings", "CustomerAddressMappings" };
 
             AreAllObjectPropertiesPresent(customer, manager, ignore.ToArray());

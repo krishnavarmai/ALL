@@ -201,8 +201,8 @@ namespace Nop.Web.Factories
                 model.PickUpInStore = order.PickUpInStore;
                 if (!order.PickUpInStore)
                 {
-                    _addressModelFactory.PrepareAddressModel(model.ShippingAddress,
-                        address: order.ShippingAddress,
+                    _addressModelFactory.PrepareShipToModel(model.ShippingAddress,
+                        address: order.ShipTo,
                         excludeProperties: false,
                         addressSettings: _addressSettings);
                 }
@@ -236,8 +236,8 @@ namespace Nop.Web.Factories
             }
 
             //billing info
-            _addressModelFactory.PrepareAddressModel(model.BillingAddress,
-                address: order.BillingAddress,
+            _addressModelFactory.PrepareBillToModel(model.BillingAddress,
+                address: order.BillTo,
                 excludeProperties: false,
                 addressSettings: _addressSettings);
 

@@ -4,6 +4,7 @@ using System.Linq;
 using Nop.Core.Caching;
 using Nop.Core.Data;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 using Nop.Services.Directory;
 using Nop.Services.Events;
 
@@ -23,7 +24,9 @@ namespace Nop.Services.Common
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Address> _addressRepository;
         private readonly IStateProvinceService _stateProvinceService;
-
+        private readonly IRepository<BillTo> _billToRepository;
+        private readonly IRepository<ShipTo> _shipToRepository;
+        private readonly IRepository<CustomerBillToMapping> _customerBillToMappingRepository;
         #endregion
 
         #region Ctor
@@ -33,7 +36,10 @@ namespace Nop.Services.Common
             ICacheManager cacheManager,
             ICountryService countryService,
             IEventPublisher eventPublisher,
+            IRepository<BillTo> billToRepository,
+            IRepository<ShipTo> shipToRepository,
             IRepository<Address> addressRepository,
+            IRepository<CustomerBillToMapping> customerBillToMappingRepository,
             IStateProvinceService stateProvinceService)
         {
             this._addressSettings = addressSettings;
@@ -43,6 +49,9 @@ namespace Nop.Services.Common
             this._eventPublisher = eventPublisher;
             this._addressRepository = addressRepository;
             this._stateProvinceService = stateProvinceService;
+            this._billToRepository = billToRepository;
+            this._shipToRepository = shipToRepository;
+            this._customerBillToMappingRepository = customerBillToMappingRepository;
         }
 
         #endregion
@@ -113,6 +122,32 @@ namespace Nop.Services.Common
             return _cacheManager.Get(key, () => _addressRepository.GetById(addressId));
         }
 
+        
+        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="addressId"></param>
+        /// <returns></returns>
+        public virtual BillTo GetBillToById(int addressId)
+        {
+            if (addressId == 0)
+                return null;
+
+            var key = string.Format(NopCommonDefaults.AddressesByIdCacheKey, addressId);
+            return _cacheManager.Get(key, () => _billToRepository.GetById(addressId));
+        }
+
+        public virtual ShipTo GetShipToById(int addressId)
+        {
+            if (addressId == 0)
+                return null;
+
+            var key = string.Format(NopCommonDefaults.AddressesByIdCacheKey, addressId);
+            return _cacheManager.Get(key, () => _shipToRepository.GetById(addressId));
+        }
+
         /// <summary>
         /// Inserts an address
         /// </summary>
@@ -155,6 +190,46 @@ namespace Nop.Services.Common
                 address.StateProvinceId = null;
 
             _addressRepository.Update(address);
+
+            //cache
+            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
+
+            //event notification
+            _eventPublisher.EntityUpdated(address);
+        }
+
+        public virtual void UpdateBillTo(BillTo address)
+        {
+            if (address == null)
+                throw new ArgumentNullException(nameof(address));
+
+            //some validation
+            if (address.CountryId == 0)
+                address.CountryId = null;
+            if (address.StateProvinceId == 0)
+                address.StateProvinceId = null;
+
+            _billToRepository.Update(address);
+
+            //cache
+            _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
+
+            //event notification
+            _eventPublisher.EntityUpdated(address);
+        }
+
+        public virtual void UpdateShipTo(ShipTo address)
+        {
+            if (address == null)
+                throw new ArgumentNullException(nameof(address));
+
+            //some validation
+            if (address.CountryId == 0)
+                address.CountryId = null;
+            if (address.StateProvinceId == 0)
+                address.StateProvinceId = null;
+
+            _shipToRepository.Update(address);
 
             //cache
             _cacheManager.RemoveByPattern(NopCommonDefaults.AddressesPatternCacheKey);
@@ -292,6 +367,25 @@ namespace Nop.Services.Common
                 //actually we should parse custom address attribute (in case if "Display order" is changed) and then compare
                 //bu we simplify this process and simply compare their values in XML
                 ((string.IsNullOrEmpty(a.CustomAttributes) && string.IsNullOrEmpty(customAttributes)) || a.CustomAttributes == customAttributes));
+        }
+
+        public int GetBillToByAddressNo(decimal addressNo)
+        {
+            var query = from a in _billToRepository.Table
+                        where a.AddressNo == addressNo
+                        select a.Id;
+            return query.FirstOrDefault();
+        }
+
+        public void InsertCustomerBillTo(CustomerBillToMapping customerBillToMapping)
+        {
+            if (customerBillToMapping == null)
+                throw new ArgumentNullException(nameof(customerBillToMapping));
+
+            _customerBillToMappingRepository.Insert(customerBillToMapping);
+
+            //event notification
+            _eventPublisher.EntityInserted(customerBillToMapping);
         }
 
         #endregion

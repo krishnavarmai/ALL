@@ -158,5 +158,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </summary>
         /// <returns>Incomplete order report list model</returns>
         OrderIncompleteReportListModel PrepareOrderIncompleteReportListModel();
+
     }
 }

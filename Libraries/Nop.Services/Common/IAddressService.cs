@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Nop.Core.Domain.Common;
+using Nop.Core.Domain.Customers;
 
 namespace Nop.Services.Common
 {
@@ -13,6 +14,8 @@ namespace Nop.Services.Common
         /// </summary>
         /// <param name="address">Address</param>
         void DeleteAddress(Address address);
+
+        void InsertCustomerBillTo(CustomerBillToMapping customerBillToMapping);
 
         /// <summary>
         /// Gets total number of addresses by country identifier
@@ -36,6 +39,25 @@ namespace Nop.Services.Common
         Address GetAddressById(int addressId);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="address"></param>
+        void UpdateBillTo(BillTo address);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="addressId"></param>
+        /// <returns></returns>
+        ShipTo GetShipToById(int addressId);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="address"></param>
+        void UpdateShipTo(ShipTo address);
+
+        /// <summary>
         /// Inserts an address
         /// </summary>
         /// <param name="address">Address</param>
@@ -54,6 +76,19 @@ namespace Nop.Services.Common
         /// <returns>Result</returns>
         bool IsAddressValid(Address address);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="addressNo"></param>
+        /// <returns></returns>
+        int GetBillToByAddressNo(decimal addressNo);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="addressId"></param>
+        /// <returns></returns>
+        BillTo GetBillToById(int addressId);
         /// <summary>
         /// Find an address
         /// </summary>

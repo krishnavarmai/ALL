@@ -265,6 +265,60 @@ namespace Nop.Web.Areas.Admin.Controllers
             return View(model);
         }
 
+        public virtual IActionResult BillToList()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = _customerModelFactory.PrepareBillToModel(new CustomerAddressSearchModel());
+
+            return View(model);
+        }
+
+        public virtual IActionResult ShipToList()
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+            //prepare model
+            var model = _customerModelFactory.PrepareBillToModel(new CustomerAddressSearchModel());
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult BillToSelect(CustomerAddressSearchModel searchModel)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedKendoGridJson();
+
+            ////try to get a customer with the specified id
+            //var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+            //    ?? throw new ArgumentException("No customer found with the specified id");
+
+            //prepare model
+            var model = _customerModelFactory.PrepareCustomerBillToListModel(searchModel);
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult ShipToSelect(CustomerAddressSearchModel searchModel)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedKendoGridJson();
+
+            ////try to get a customer with the specified id
+            //var customer = _customerService.GetCustomerById(searchModel.CustomerId)
+            //    ?? throw new ArgumentException("No customer found with the specified id");
+
+            //prepare model
+            var model = _customerModelFactory.PrepareCustomerShipToListModel(searchModel);
+
+            return Json(model);
+        }
+
         [HttpPost]
         public virtual IActionResult CustomerList(CustomerSearchModel searchModel)
         {
@@ -1132,6 +1186,7 @@ namespace Nop.Web.Areas.Admin.Controllers
 
         #region Addresses
 
+
         [HttpPost]
         public virtual IActionResult AddressesSelect(CustomerAddressSearchModel searchModel)
         {
@@ -1143,7 +1198,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 ?? throw new ArgumentException("No customer found with the specified id");
 
             //prepare model
-            var model = _customerModelFactory.PrepareCustomerAddressListModel(searchModel, customer);
+            var model = _customerModelFactory.PrepareCustomerBillToListModel(searchModel, customer);
 
             return Json(model);
         }
@@ -1183,11 +1238,11 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //prepare model
-            var model = _customerModelFactory.PrepareCustomerAddressModel(new CustomerAddressModel(), customer, null);
+            var model = _customerModelFactory.PrepareCustomerAddressModel(new CustomerAddressModel(), customer, address:null);
 
             return View(model);
         }
-
+        
         [HttpPost]
         public virtual IActionResult AddressCreate(CustomerAddressModel model)
         {
@@ -1245,12 +1300,12 @@ namespace Nop.Web.Areas.Admin.Controllers
                 return RedirectToAction("List");
 
             //try to get an address with the specified id
-            var address = _addressService.GetAddressById(addressId);
+            var address = _addressService.GetBillToById(addressId);
             if (address == null)
                 return RedirectToAction("Edit", new { id = customer.Id });
 
             //prepare model
-            var model = _customerModelFactory.PrepareCustomerAddressModel(null, customer, address);
+            var model = _customerModelFactory.PrepareCustomerBillToModel(null, customer, address);
 
             return View(model);
         }
@@ -1295,6 +1350,116 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //if we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult BillToEdit(CustomerAddressModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+
+            //try to get an address with the specified id
+            var address = _addressService.GetBillToById(model.Address.Id);
+            if (address == null)
+                return RedirectToAction("BillToList");
+
+            //custom address attributes
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            foreach (var error in customAttributeWarnings)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            if (ModelState.IsValid)
+            {
+                address = model.Address.ToEntity(address);
+                address.CustomAttributes = customAttributes;
+                _addressService.UpdateBillTo(address);
+
+                SuccessNotification(_localizationService.GetResource("BillTo Updated."));
+
+                return RedirectToAction("BillToList");
+            }
+
+            //if we got this far, something failed, redisplay form
+            return RedirectToAction("BillToList");
+        }
+
+        [HttpGet]
+        public virtual IActionResult BillToEdit(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+
+            //try to get an address with the specified id
+            var address = _addressService.GetBillToById(id);
+            if (address == null)
+                return RedirectToAction("BillToList");
+
+          
+
+            //prepare model
+            var model = _customerModelFactory.PrepareCustomerBillToModel(null, address);
+
+            return View("AddressEdit",model);
+        }
+
+        [HttpPost]
+        public virtual IActionResult ShipToEdit(CustomerAddressModel model)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+
+            //try to get an address with the specified id
+            var address = _addressService.GetShipToById(model.Address.Id);
+            if (address == null)
+                return RedirectToAction("ShipToList");
+
+            //custom address attributes
+            var customAttributes = _addressAttributeParser.ParseCustomAddressAttributes(model.Form);
+            var customAttributeWarnings = _addressAttributeParser.GetAttributeWarnings(customAttributes);
+            foreach (var error in customAttributeWarnings)
+            {
+                ModelState.AddModelError(string.Empty, error);
+            }
+
+            if (ModelState.IsValid)
+            {
+                address = model.Address.ToEntity(address);
+                address.CustomAttributes = customAttributes;
+                _addressService.UpdateShipTo(address);
+
+                SuccessNotification(_localizationService.GetResource("ShipTo Updated."));
+
+                return RedirectToAction("ShipToList");
+            }
+
+            //if we got this far, something failed, redisplay form
+            return RedirectToAction("ShipToList");
+        }
+
+        [HttpGet]
+        public virtual IActionResult ShipToEdit(int id)
+        {
+            if (!_permissionService.Authorize(StandardPermissionProvider.ManageCustomers))
+                return AccessDeniedView();
+
+
+            //try to get an address with the specified id
+            var address = _addressService.GetShipToById(id);
+            if (address == null)
+                return RedirectToAction("BillToList");
+
+
+
+            //prepare model
+            var model = _customerModelFactory.PrepareCustomerShipToModel(null, address);
+
+            return View("AddressEdit", model);
         }
 
         #endregion

@@ -10161,6 +10161,9 @@
   <LocaleResource Name="Admin.Customers.Customers">
     <Value>Customers</Value>
   </LocaleResource>
+  <LocaleResource Name="Admin.Customers.BillTos">
+    <Value>Customer BillTos</Value>
+  </LocaleResource>
   <LocaleResource Name="Admin.Customers.Customers.ActivityLog">
     <Value>Activity log</Value>
   </LocaleResource>

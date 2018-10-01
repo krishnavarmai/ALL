@@ -34,6 +34,8 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(order => order.OrderTotal).HasColumnType("decimal(18, 4)");
             builder.Property(order => order.RefundedAmount).HasColumnType("decimal(18, 4)");
             builder.Property(order => order.CustomOrderNumber).IsRequired();
+            builder.Property(order => order.BillingId).HasColumnName("BillTo_Id");
+            builder.Property(order => order.ShippingId).HasColumnName("ShipTo_Id");
 
             builder.HasOne(order => order.Customer)
                 .WithMany()
@@ -42,13 +44,21 @@ namespace Nop.Data.Mapping.Orders
 
             builder.HasOne(order => order.BillingAddress)
                 .WithMany()
-                .HasForeignKey(order => order.BillingAddressId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(order => order.BillingAddressId);
+                //.IsRequired()
+                //.OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(order => order.ShippingAddress)
                 .WithMany()
                 .HasForeignKey(order => order.ShippingAddressId);
+
+            builder.HasOne(order => order.BillTo)
+                .WithMany()
+                .HasForeignKey(order => order.BillingId);
+
+            builder.HasOne(order => order.ShipTo)
+                .WithMany()
+                .HasForeignKey(order => order.ShippingId);
 
             builder.HasOne(order => order.PickupAddress)
                 .WithMany()

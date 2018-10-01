@@ -298,16 +298,7 @@ namespace Nop.Web.Factories
             return model;
         }
 
-        public virtual ShippingAddressModel PrepareShippingAddressModel()
-        {
-            
-            var model = new ShippingAddressModel
-            {
-                ShipTos = _customerService.GetShipTos()
-            };
 
-            return model;
-        }
         /// <summary>
         /// Prepare the tax type selector model
         /// </summary>
@@ -394,11 +385,17 @@ namespace Nop.Web.Factories
         public virtual CustomerHeaderLinksModel PrepareCustomerHeaderLinksModel()
         {
             var customer = _workContext.CurrentCustomer;
+            if (!customer.BillingId.HasValue)
+            {
+                customer.BillingId = customer.BillTos.FirstOrDefault()?.Id;
+                _customerService.UpdateCustomer(customer);
+            }
 
             var model = new CustomerHeaderLinksModel
             {
-               DisplayBillToLink =  customer.IsRegistered(),
-               BillTos = customer.BillTos
+                DisplayBillToLink = customer.IsRegistered(),
+                BillTos = customer.BillTos,
+                CurrentBillToId = customer.BillingId.HasValue ? customer.BillingId.Value : 0,
             };
 
             return model;

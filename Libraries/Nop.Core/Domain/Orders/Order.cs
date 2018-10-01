@@ -40,12 +40,22 @@ namespace Nop.Core.Domain.Orders
         /// <summary>
         /// Gets or sets the billing address identifier
         /// </summary>
-        public int BillingAddressId { get; set; }
+        public int? BillingAddressId { get; set; }
 
         /// <summary>
         /// Gets or sets the shipping address identifier
         /// </summary>
         public int? ShippingAddressId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the billing address identifier
+        /// </summary>
+        public int? BillingId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the shipping address identifier
+        /// </summary>
+        public int? ShippingId { get; set; }
 
         /// <summary>
         /// Gets or sets the pickup address identifier
@@ -297,6 +307,15 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public string CustomOrderNumber { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public int? JDEOrderNo { get; set; }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public string PO_RefNo { get; set; }
         #endregion
 
         #region Navigation properties
@@ -315,6 +334,10 @@ namespace Nop.Core.Domain.Orders
         /// Gets or sets the shipping address
         /// </summary>
         public virtual Address ShippingAddress { get; set; }
+
+        public virtual BillTo BillTo { get; set; }
+
+        public virtual ShipTo ShipTo { get; set; }
 
         /// <summary>
         /// Gets or sets the pickup address
