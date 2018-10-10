@@ -194,6 +194,8 @@ namespace Nop.Services.Orders
         /// <returns>Total number of already delivered items</returns>
         int GetTotalNumberOfDeliveredItems(OrderItem orderItem);
 
+        decimal? getMaxLineNumber(int OrderId);
+
         #endregion
 
         #region Order notes

@@ -579,7 +579,9 @@ namespace Nop.Services.ExportImport
                 new PropertyByName<OrderItem>("DiscountExclTax", oi => oi.DiscountAmountExclTax),
                 new PropertyByName<OrderItem>("DiscountInclTax", oi => oi.DiscountAmountInclTax),
                 new PropertyByName<OrderItem>("TotalExclTax", oi => oi.PriceExclTax),
-                new PropertyByName<OrderItem>("TotalInclTax", oi => oi.PriceInclTax)
+                new PropertyByName<OrderItem>("TotalInclTax", oi => oi.PriceInclTax),
+                new PropertyByName<OrderItem>("StatusId", oi => oi.StatusId),
+                new PropertyByName<OrderItem>("LineNumber", oi => oi.LineNumber)
             };
 
             var orderItemsManager = new PropertyManager<OrderItem>(orderItemProperties, _catalogSettings);

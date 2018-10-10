@@ -1898,6 +1898,7 @@ namespace Nop.Web.Areas.Admin.Controllers
                 //weight
                 var itemWeight = _shippingService.GetShoppingCartItemWeight(product, attributesXml);
 
+                var maxorderId = _orderService.getMaxLineNumber(order.Id);
                 //save item
                 var orderItem = new OrderItem
                 {
@@ -1919,7 +1920,10 @@ namespace Nop.Web.Areas.Admin.Controllers
                     LicenseDownloadId = 0,
                     ItemWeight = itemWeight,
                     RentalStartDateUtc = rentalStartDate,
-                    RentalEndDateUtc = rentalEndDate
+                    RentalEndDateUtc = rentalEndDate,
+                    StatusId = Convert.ToInt32(OrderStatus.Pending),
+                    LineNumber = maxorderId == null ? decimal.One : maxorderId + 1
+
                 };
                 order.OrderItems.Add(orderItem);
                 _orderService.UpdateOrder(order);

@@ -1289,6 +1289,7 @@ namespace Nop.Services.Orders
 
                 var itemWeight = _shippingService.GetShoppingCartItemWeight(sc);
 
+                var maxorderId = _orderService.getMaxLineNumber(order.Id);
                 //save order item
                 var orderItem = new OrderItem
                 {
@@ -1310,7 +1311,9 @@ namespace Nop.Services.Orders
                     LicenseDownloadId = 0,
                     ItemWeight = itemWeight,
                     RentalStartDateUtc = sc.RentalStartDateUtc,
-                    RentalEndDateUtc = sc.RentalEndDateUtc
+                    RentalEndDateUtc = sc.RentalEndDateUtc,
+                    StatusId = Convert.ToInt32(OrderStatus.Pending),
+                    LineNumber = maxorderId == null ? decimal.One : maxorderId + 1
                 };
                 order.OrderItems.Add(orderItem);
                 _orderService.UpdateOrder(order);
@@ -1868,8 +1871,10 @@ namespace Nop.Services.Orders
                     //save order details
                     var order = SaveOrderDetails(processPaymentRequest, processPaymentResult, details);
 
+                    decimal Linenumber = 0;
                     foreach (var orderItem in details.InitialOrder.OrderItems)
                     {
+                        Linenumber = Linenumber + 1;
                         //save item
                         var newOrderItem = new OrderItem
                         {
@@ -1891,7 +1896,9 @@ namespace Nop.Services.Orders
                             LicenseDownloadId = 0,
                             ItemWeight = orderItem.ItemWeight,
                             RentalStartDateUtc = orderItem.RentalStartDateUtc,
-                            RentalEndDateUtc = orderItem.RentalEndDateUtc
+                            RentalEndDateUtc = orderItem.RentalEndDateUtc,
+                            LineNumber = Linenumber,
+                            StatusId = Convert.ToInt32(OrderStatus.Pending)
                         };
                         order.OrderItems.Add(newOrderItem);
                         _orderService.UpdateOrder(order);

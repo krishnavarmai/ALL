@@ -772,6 +772,12 @@ namespace Nop.Services.Orders
             return recurringPayments;
         }
 
+        public decimal? getMaxLineNumber(int OrderId)
+        {
+            var query = _orderItemRepository.Table.Where(oi => oi.OrderId == OrderId).Max(r=>r.LineNumber);
+            return query;
+        }
+
         #endregion
 
         #endregion

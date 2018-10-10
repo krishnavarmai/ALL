@@ -28,6 +28,7 @@ namespace Nop.Data.Mapping.Orders
             builder.Property(orderItem => orderItem.DiscountAmountExclTax).HasColumnType("decimal(18, 4)");
             builder.Property(orderItem => orderItem.OriginalProductCost).HasColumnType("decimal(18, 4)");
             builder.Property(orderItem => orderItem.ItemWeight).HasColumnType("decimal(18, 4)");
+            builder.Property(orderItem => orderItem.LineNumber).HasColumnType("decimal(18, 4)");
 
             builder.HasOne(orderItem => orderItem.Order)
                 .WithMany(order => order.OrderItems)

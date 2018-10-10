@@ -117,6 +117,10 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         public virtual Product Product { get; set; }
 
+        public decimal? LineNumber { get; set; }
+
+        public int? StatusId { get; set; }
+
         /// <summary>
         /// Gets or sets the associated gift card
         /// </summary>
