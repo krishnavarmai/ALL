@@ -55,6 +55,12 @@ namespace Nop.Web.Infrastructure
             routeBuilder.MapLocalizedRoute("CustomerInfo", "customer/info",
 				new { controller = "Customer", action = "Info" });
 
+            routeBuilder.MapLocalizedRoute("CustomerInvoices", "customer/invoices",
+                new { controller = "Customer", action = "Invoices" });
+
+            routeBuilder.MapLocalizedRoute("CustomerOpenInvoices", "customer/OpenInvoices",
+                new { controller = "Customer", action = "OpenInvoices" });
+
             routeBuilder.MapLocalizedRoute("CustomerAddresses", "customer/addresses",
 				new { controller = "Customer", action = "Addresses" });
 

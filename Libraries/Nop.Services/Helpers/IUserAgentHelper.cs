@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Nop.Services.Helpers
 {
     /// <summary>
@@ -22,5 +24,7 @@ namespace Nop.Services.Helpers
         /// </summary>
         /// <returns></returns>
         bool IsIe8();
+
+        IEnumerable<StatusCodes> getStatusCodes();
     }
 }

@@ -1,0 +1,199 @@
+﻿@model CustomerInvoicesListModel
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-order-list-page");
+    var kendoVersion = "2014.1.318";
+    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.rtl.min.css");
+    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.default.min.css");
+    Html.AppendCssFileParts($"~/lib/kendo/{kendoVersion}/kendo.common.min.css");
+    Html.AppendScriptParts($"~/lib/kendo/{kendoVersion}/kendo.web.min.js");
+}
+@section left
+    {
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.OpenInvoices })
+}
+@*<script src="https://kendo.cdn.telerik.com/2018.3.1017/js/kendo.all.min.js"></script>*@
+@*<script src="js/kendo.all.min.js"></script>*@
+<div class="page account-page order-list-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - Open Invoices</h1>
+    </div>
+    <div class="page-body">
+
+        <div class="content">
+            <div class="form-horizontal">
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div id="forumgroup-grid"></div>
+                            
+                                <div class="form-fields" id="CreditcardPayment" style="display: none;">
+                                    <div class="inputs">
+                                        <label for="CreditCard">Credit Card #:</label>
+                                        <input type="text" data-val="true" style="width:50%"  id="CreditCard" name="CreditCard">
+                                        <span class="required">*</span>
+                                    </div>
+                                    <div class="inputs date-of-birth">
+                                        <label>Expiry Date:</label>
+                                        <div class="date-picker-wrapper">
+                                            <select name="ExpiryMonth" id="ExpiryMonth" data-val="true" ><option value="">Month</option><option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select><span class="required">*</span>
+                                            <select name="ExpiryYear" id="ExpiryYear" data-val="true" ><option value="">Year</option><option value="2018">2018</option><option value="2019">2019</option><option value="2020">2020</option><option value="2021">2021</option><option value="2022">2022</option><option value="2023">2023</option><option value="2024">2024</option><option value="2025">2025</option><option value="2026">2026</option></select><span class="required">*</span>
+                                        </div>
+                                    </div>
+                                    <div class="inputs">
+                                        <label for="Email">CVV:</label>
+                                        <input type="text" style="width:30%" data-val="true" id="CVV" name="CVV">
+                                        <span class="required">*</span>
+                                    </div>
+                                    <div class="inputs">
+                                        <input type="submit" id="save-info-button" value="Submit Payment" onclick="submitPayment()" name="save-info-button" class="button-1 save-customer-info-button">
+                                    </div>
+                                </div>
+                            
+
+
+                            <div class="buttons">
+                                <input type="submit" id="save-info-button" value="PayInvoices" onclick="onPayClick()" name="save-info-button" class="button-1 save-customer-info-button">
+                            </div>
+                            <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                            <script>
+                                var InvoiceNums = "";
+                                var statesProgress = $("#states-loading-progress");
+                                function onPayClick() {
+                                    var selectedCheckBox = $('.InvNum:checkbox:checked');
+                                    if (selectedCheckBox.length != undefined && selectedCheckBox.length > 0) {
+                                        $("#CreditcardPayment").show();
+                                        selectedCheckBox.each(function () {
+                                            InvoiceNums += $(this).attr('name') + ";";
+                                        });
+                                        console.log(InvoiceNums);
+                                    }
+                                    else {
+
+                                        $("#CreditcardPayment").hide();
+                                    }
+                                    //console.log("" + $("#forumgroup-grid").kendoGrid().select().join(", "));
+                                    //kendoConsole.log("The selected product ids are: [" + this.selectedKeyNames().join(", ") + "]");
+                                }
+                                function submitPayment() {
+                                    statesProgress.show();
+                                    if ($("#CreditCard").val() == null || $("#CreditCard").val() == "") {
+                                        alert("Credit card Number Required");
+                                        statesProgress.hide();
+                                        return;
+                                    }
+                                    if ($("#CVV").val() == null || $("#CVV").val() == "") {
+                                        alert("CVV Required");
+                                        statesProgress.hide();
+                                        return;
+                                    }
+                                    if ($("#ExpiryMonth").val() == null || $("#ExpiryMonth").val() == "") {
+                                        alert("Expiry month required.");
+                                        statesProgress.hide();
+                                        return;
+                                    }
+                                    if ($("#ExpiryYear").val() == null || $("#ExpiryYear").val() == "") {
+                                        alert("Expiry month required.");
+                                        statesProgress.hide();
+                                        return;
+                                    }
+                                    $.ajax({
+                                        cache: false,
+                                        type: "POST",
+                                        url: "@Html.Raw(Url.Action("SubmitPaymentList", "Customer"))",
+                                        data: { "InvoiceIds": InvoiceNums, "CardNumber": $("#CreditCard").val(), "CVV": $("#CVV").val(), "ExpiryMonth": $("#ExpiryMonth").val(), "ExpiryYear": $("#ExpiryYear").val() },
+                                        success: function (data) {
+                                            if (data == true) {
+                                                location.reload();
+                                            }
+                                            else {
+                                                alert("Something went wrong please contact admin.")
+                                            }
+                                            statesProgress.hide();
+                                        },
+                                        error: function (xhr, ajaxOptions, thrownError) {
+                                            statesProgress.hide();
+                                            alert('Failed to retrieve status.');
+                                        }
+                                    });
+                                    return false;
+                                }
+                                function clearAllFields() {
+
+
+                                }
+                                $(document).ready(function () {
+                                    $("#forumgroup-grid").kendoGrid({
+                                        columns: [
+                                            {
+                                                field: "Id",
+                                                title: "Select",
+                                                width: 80,
+                                                template: '<input type="checkbox" name="#=InvoiceNum#" class="InvNum" />'
+                                            },
+                                            {
+                                                field: "InvoiceNum",
+                                                title: "InvoiceNum",
+                                                attributes: { class: "InvNum" },
+                                                width: 200
+                                            }, {
+                                                field: "InvDate",
+                                                title: "InvDate",
+                                                type: "date",
+                                                format: "{0:G}",
+                                                width: 300
+                                            }, {
+                                                field: "Amount",
+                                                title: "Amount",
+                                                width: 100,
+                                            }, {
+                                                field: "Status",
+                                                title: "Status",
+                                                width: 200,
+                                            }
+                                        ],
+                                        dataSource: {
+                                            type: "json",
+                                            transport: {
+                                                read: {
+                                                    url: "@Html.Raw(Url.Action("OpenInvoicesList", "Customer"))",
+                                                    type: "POST",
+                                                    dataType: "json",
+                                                    data: addAntiForgeryToken
+                                                }
+                                            },
+                                            pageable: true,
+                                            serverPaging: false,
+                                            pageSize: 5,
+
+                                        },
+
+                                pageable: {
+                                    refresh: true,
+                                    alwaysVisible: false,
+                                    pageSizes: true
+
+                                },
+                                selectable: "multiple, row",
+                                persistSelection: true,
+                                //details grid
+                                //detailInit: detailInit,
+                                scrollable: false,
+
+
+                            });
+                        });
+
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

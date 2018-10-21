@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StatusCodes>
+  <StatusCode name="SalesOrderStatusCodes">
+<item name="570" value="Open" />
+<item name="10" value="Pending" />
+<item name="620" value="Shipped" />
+<item name="900" value="Shipped" />
+<item name="902" value="Shipped" />
+<item name="904" value="Shipped" />
+<item name="912" value="Shipped" />
+<item name="914" value="Shipped" />
+<item name="980" value="Shipped" />
+<item name="982" value="Shipped" />
+<item name="984" value="Shipped" />
+<item name="999" value="Shipped" />
+  </StatusCode>  
+</StatusCodes>

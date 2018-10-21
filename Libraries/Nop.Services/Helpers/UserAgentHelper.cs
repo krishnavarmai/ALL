@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
@@ -71,9 +72,50 @@ namespace Nop.Services.Helpers
             }
         }
 
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        protected virtual StatusCodesHelper GetStatusCodesHelper()
+        {
+            if (Singleton<StatusCodesHelper>.Instance != null)
+                return Singleton<StatusCodesHelper>.Instance;
+
+            //no database created
+            if (string.IsNullOrEmpty(_nopConfig.JDEStatusCodes))
+                return null;
+
+            //prevent multi loading data
+            lock (_locker)
+            {
+                //data can be loaded while we waited
+                if (Singleton<StatusCodesHelper>.Instance != null)
+                    return Singleton<StatusCodesHelper>.Instance;
+
+                var OrderStatusCodesPath = _fileProvider.MapPath(_nopConfig.JDEStatusCodes);
+
+                var StatusCodesHelper = new StatusCodesHelper(OrderStatusCodesPath, _fileProvider);
+                Singleton<StatusCodesHelper>.Instance = StatusCodesHelper;
+
+                return Singleton<StatusCodesHelper>.Instance;
+            }
+        }
+
         #endregion
 
         #region Methods
+
+        public virtual IEnumerable<StatusCodes> getStatusCodes()
+        {
+            try
+            {
+                var helper = GetStatusCodesHelper();               
+                return helper.statusCodesJDE();
+            }
+            catch
+            {
+                return null;
+                // ignored
+            }
+        }
 
         /// <summary>
         /// Get a value indicating whether the request is made by search engine (web crawler)

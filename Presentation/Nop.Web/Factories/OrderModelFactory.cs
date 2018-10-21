@@ -21,7 +21,8 @@ using Nop.Services.Shipping;
 using Nop.Services.Vendors;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Order;
-
+using Nop.Core.Configuration;
+using Nop.Core.Infrastructure;
 namespace Nop.Web.Factories
 {
     /// <summary>
@@ -57,6 +58,8 @@ namespace Nop.Web.Factories
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
+        private readonly IUserAgentHelper _userAgentHelper;
+
 
         #endregion
 
@@ -87,7 +90,8 @@ namespace Nop.Web.Factories
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
             TaxSettings taxSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            IUserAgentHelper userAgentHelper)
         {
             this._addressSettings = addressSettings;
             this._catalogSettings = catalogSettings;
@@ -115,6 +119,7 @@ namespace Nop.Web.Factories
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
+            this._userAgentHelper = userAgentHelper;
         }
 
         #endregion
@@ -395,7 +400,7 @@ namespace Nop.Web.Factories
             var orderItems = order.OrderItems;
 
             var vendors = _vendorSettings.ShowVendorOnOrderDetailsPage ? _vendorService.GetVendorsByIds(orderItems.Select(item => item.Product.VendorId).ToArray()) : new List<Vendor>();
-
+           
             foreach (var orderItem in orderItems)
             {
                 var orderItemModel = new OrderDetailsModel.OrderItemModel
@@ -405,6 +410,7 @@ namespace Nop.Web.Factories
                     Sku = _productService.FormatSku(orderItem.Product, orderItem.AttributesXml),
                     VendorName = vendors.FirstOrDefault(v => v.Id == orderItem.Product.VendorId)?.Name ?? string.Empty,
                     ProductId = orderItem.Product.Id,
+                    OrderItemStatus = getStatus(orderItem.StatusId.HasValue? orderItem.StatusId.Value:0), //((OrderStatus)(orderItem.StatusId.HasValue ? orderItem.StatusId.Value : 10)).ToString(),
                     ProductName = _localizationService.GetLocalized(orderItem.Product, x => x.Name),
                     ProductSeName = _urlRecordService.GetSeName(orderItem.Product),
                     Quantity = orderItem.Quantity,
@@ -452,6 +458,19 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        public string getStatus(int nopstatus)
+        {
+            var statuscodes = _userAgentHelper.getStatusCodes();
+            string status = "";
+            foreach (var x in statuscodes)
+            {
+                if(x.value==nopstatus)
+                {
+                    return x.name;
+                }
+            }
+            return status;
+        }
         /// <summary>
         /// Prepare the shipment details model
         /// </summary>
@@ -490,7 +509,7 @@ namespace Nop.Web.Factories
                             {
                                 var shipmentStatusEventModel = new ShipmentDetailsModel.ShipmentStatusEventModel();
                                 var shipmentEventCountry = _countryService.GetCountryByTwoLetterIsoCode(shipmentEvent.CountryCode);
-                                shipmentStatusEventModel.Country = shipmentEventCountry != null 
+                                shipmentStatusEventModel.Country = shipmentEventCountry != null
                                     ? _localizationService.GetLocalized(shipmentEventCountry, x => x.Name) : shipmentEvent.CountryCode;
                                 shipmentStatusEventModel.Date = shipmentEvent.Date;
                                 shipmentStatusEventModel.EventName = shipmentEvent.EventName;

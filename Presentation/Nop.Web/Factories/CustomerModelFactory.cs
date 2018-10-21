@@ -27,6 +27,7 @@ using Nop.Services.Seo;
 using Nop.Services.Stores;
 using Nop.Web.Models.Common;
 using Nop.Web.Models.Customer;
+using Nop.Web.Models.Order;
 
 namespace Nop.Web.Factories
 {
@@ -71,7 +72,7 @@ namespace Nop.Web.Factories
         private readonly SecuritySettings _securitySettings;
         private readonly TaxSettings _taxSettings;
         private readonly VendorSettings _vendorSettings;
-
+        private readonly IUserAgentHelper _userAgentHelper;
         #endregion
 
         #region Ctor
@@ -109,7 +110,9 @@ namespace Nop.Web.Factories
             RewardPointsSettings rewardPointsSettings,
             SecuritySettings securitySettings,
             TaxSettings taxSettings,
-            VendorSettings vendorSettings)
+            VendorSettings vendorSettings,
+            IUserAgentHelper userAgentHelper
+            )
         {
             this._addressSettings = addressSettings;
             this._captchaSettings = captchaSettings;
@@ -145,6 +148,7 @@ namespace Nop.Web.Factories
             this._securitySettings = securitySettings;
             this._taxSettings = taxSettings;
             this._vendorSettings = vendorSettings;
+            this._userAgentHelper = userAgentHelper;
         }
 
         #endregion
@@ -658,7 +662,20 @@ namespace Nop.Web.Factories
                 Tab = CustomerNavigationEnum.Orders,
                 ItemClass = "customer-orders"
             });
-
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerInvoices",
+                Title = "Invoices",
+                Tab = CustomerNavigationEnum.Invoices,
+                ItemClass = "customer-orders"
+            });
+            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
+            {
+                RouteName = "CustomerOpenInvoices",
+                Title = "OpenInvoices",
+                Tab = CustomerNavigationEnum.OpenInvoices,
+                ItemClass = "customer-orders"
+            });
             if (_orderSettings.ReturnRequestsEnabled &&
                 _returnRequestService.SearchReturnRequests(_storeContext.CurrentStore.Id,
                     _workContext.CurrentCustomer.Id, pageIndex: 0, pageSize: 1).Any())
@@ -908,6 +925,81 @@ namespace Nop.Web.Factories
         {
             var model = new CheckGiftCardBalanceModel();
             return model;
+        }
+
+        private string getStatus(int nopstatus)
+        {
+            var statuscodes = _userAgentHelper.getStatusCodes();
+            string status = "";
+            foreach (var x in statuscodes)
+            {
+                if (x.value == nopstatus)
+                {
+                    return x.name;
+                }
+            }
+            return status;
+        }
+        public CustomerInvoicesListModel PrepareCustomerInvoicesListModel(CustomerInvoicesListModel customerInvoicesListModel)
+        {
+            var modelList = new CustomerInvoicesListModel();
+            var invoices = _orderService.GetInvoices(_workContext.CurrentCustomer.Email);
+
+            foreach (var invoice in invoices)
+            {
+                var model = new CustomerInvoicesListModel.Invoices()
+                {
+                    Id = invoice.Id,
+                    Amount = invoice.Amount,
+                    InvDate = invoice.InvDate,
+                    InvoiceNum = invoice.InvoiceNum,
+                    Status = getStatus(invoice.StatusId.HasValue ? invoice.StatusId.Value : 0)
+                };
+
+                modelList.InvoicesList.Add(model);
+            }
+            modelList.PageSize = modelList?.InvoicesList.Count;
+
+
+            return modelList;
+        }
+
+        public CustomerInvoicesListModel PrepareCustomerOpenInvoicesListModel(CustomerInvoicesListModel customerInvoicesListModel)
+        {
+            var modelList = new CustomerInvoicesListModel();
+            var invoices = _orderService.GetOpenInvoices(_workContext.CurrentCustomer.Email);
+
+            foreach (var invoice in invoices)
+            {
+                var model = new CustomerInvoicesListModel.Invoices()
+                {
+                    Id = invoice.Id,
+                    Amount = invoice.Amount,
+                    InvDate = invoice.InvDate,
+                    InvoiceNum = invoice.InvoiceNum,
+                    Status = getStatus(invoice.StatusId.HasValue ? invoice.StatusId.Value : 0)
+                };
+
+                modelList.InvoicesList.Add(model);
+            }
+            modelList.PageSize = modelList?.InvoicesList.Count;
+            return modelList;
+        }
+
+        public bool InvoiceUpdateModel(CreditCardModel creditCard)
+        {
+            string[] invoices = creditCard.InvoiceIds.Split(';');
+            foreach(string inv in invoices)
+            {
+                int invoiceNum = 0;
+                int.TryParse(inv, out invoiceNum);
+                if(invoiceNum>0)
+                {
+                    if(!_orderService.UpdateInvoiceStatus(invoiceNum))
+                    { return false; }
+                }
+            }
+            return true;
         }
 
         #endregion

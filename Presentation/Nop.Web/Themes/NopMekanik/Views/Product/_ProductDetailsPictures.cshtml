@@ -1,0 +1,160 @@
+﻿@model ProductDetailsModel
+@using Nop.Core
+@inject IStoreContext storeContext
+@using Nop.Core.Domain.Media
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Configuration;
+@using Nop.Services.Media;
+@using System.Text.RegularExpressions;
+
+@{
+    var pictureService = EngineContext.Current.Resolve<IPictureService>();
+    var mediaSettings = EngineContext.Current.Resolve<MediaSettings>();
+}
+
+@{
+    var currentStore = storeContext.CurrentStore.Id;
+
+    bool productImageZoom = EngineContext.Current.Resolve<ISettingService>().GetSettingByKey<bool>(
+    "NopMekanik.ProductImageZoom", false, currentStore, true);
+
+    var settingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Configuration.ISettingService>();
+    var quickViewEnabled = settingService.GetSettingByKey<bool>("NopMekanik.QuickView", false, currentStore, true);
+    var isQuickView = (quickViewEnabled && Context.Request.Query["quickview"] == "1");
+
+    if (productImageZoom)
+    {
+        Html.AddScriptParts("~/Themes/NopMekanik/Content/js/jquery.elevatezoom.js");
+    }
+    else
+    {
+        Html.AddScriptParts(ResourceLocation.Footer, "~/lib/magnific-popup/jquery.magnific-popup.min.js");
+        Html.AddCssFileParts("~/lib/magnific-popup/magnific-popup.css");
+    }
+}
+
+    @if (productImageZoom)
+    {
+        <div class="picture">
+            <img alt="@Model.DefaultPictureModel.AlternateText" data-zoom-image="@Model.DefaultPictureModel.FullSizeImageUrl"
+                 src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image"
+                 id="main-product-img-@Model.Id" class="main-image" />
+        </div>
+        if (Model.PictureModels.Count > 1)
+        {
+            <div class="picture-thumbs">
+                @for (int i = 0; i < Model.PictureModels.Count; i++)
+                {
+                    var picture = Model.PictureModels[i];
+                    var match = Regex.Match(picture.FullSizeImageUrl, @"\/(\d{7})_");
+                    var dataImage = string.Empty;
+                    if (match.Success && match.Groups.Count > 1)
+                    {
+                        var pictureId = 0;
+                        if (int.TryParse(match.Groups[1].Value, out pictureId))
+                        {
+                            dataImage = pictureService.GetPictureUrl(pictureId, mediaSettings.ProductDetailsPictureSize);
+                        }
+                    }
+
+                    <a class="thumb-popup-link" href="#" title="@Model.Name" data-zoom-image="@picture.FullSizeImageUrl" data-image="@dataImage">
+                        <img src="@picture.ImageUrl" alt="@picture.AlternateText" title="@picture.Title" />
+                    </a>
+                }
+            </div>
+        }
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                if ($(window).width() > 990) {
+                    var config = {
+                        cursor: "crosshair",
+                        zoomType: 'inner',
+                        zoomWindowHeight: $('.main-image').height(),
+                        zoomWindowWidth: $('.main-image').width(),
+                        responsive: 'true',
+                    };
+
+                    $(".main-image").elevateZoom(config);
+
+                    $('.thumb-popup-link').click(function (e) {
+                        e.preventDefault();
+
+                        var zoomImage = $('.main-image');
+
+                        $('.zoomContainer').remove();
+                        zoomImage.removeData('elevatedZoom');
+                        zoomImage.attr('src', $(this).data('image'));
+                        zoomImage.data('zoom-image', $(this).data('zoom-image'));
+
+                        zoomImage.elevateZoom(config);
+                    });
+                }
+                else {
+                    $('.thumb-popup-link').click(function (e) {
+                        e.preventDefault();
+
+                        var zoomImage = $('.main-image');
+
+                        $('.zoomContainer').remove();
+                        zoomImage.removeData('elevatedZoom');
+                        zoomImage.attr('src', $(this).data('image'));
+                        zoomImage.data('zoom-image', $(this).data('zoom-image'));
+                    });
+                }
+            });
+        </script>
+    }
+    else
+    {
+        <div class="picture">
+            @if (Model.DefaultPictureZoomEnabled && !isQuickView)
+            {
+                <a href="@Model.DefaultPictureModel.FullSizeImageUrl" title="@Model.DefaultPictureModel.Title" id="main-product-img-lightbox-anchor-@Model.Id">
+                    <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
+                </a>
+                <script>
+                    $(document).ready(function () {
+                        $('#main-product-img-lightbox-anchor-@Model.Id').magnificPopup(
+                        {
+                            type: 'image',
+                            removalDelay: 300,
+                            gallery: {
+                                enabled: true,
+                                tPrev: '@T("Media.MagnificPopup.Previous")',
+                                tNext: '@T("Media.MagnificPopup.Next")',
+                                tCounter: '@T("Media.MagnificPopup.Counter")'
+                            },
+                            tClose: '@T("Media.MagnificPopup.Close")',
+                            tLoading: '@T("Media.MagnificPopup.Loading")'
+                        });
+                    });
+                </script>
+            }
+            else
+            {
+                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-img-@Model.Id" />
+            }
+        </div>
+        if (Model.PictureModels.Count > 1)
+        {
+            <div class="picture-thumbs">
+                @foreach (var picture in Model.PictureModels)
+                {
+                    <div class="thumb-item">
+                        <img src="@picture.ThumbImageUrl" alt="@picture.AlternateText" title="@picture.Title" data-defaultsize="@picture.ImageUrl" data-fullsize="@picture.FullSizeImageUrl" />
+                    </div>
+                }
+            </div>
+            <script asp-location="Footer">
+                $(document).ready(function () {
+                    $('.thumb-item img').on('click', function () {
+                        $('#main-product-img-@Model.Id').attr('src', $(this).attr('data-defaultsize'));
+                        $('#main-product-img-@Model.Id').attr('title', $(this).attr('title'));
+                        $('#main-product-img-@Model.Id').attr('alt', $(this).attr('alt'));
+                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('href', $(this).attr('data-fullsize'));
+                        $('#main-product-img-lightbox-anchor-@Model.Id').attr('title', $(this).attr('title'));
+                    });
+                });
+            </script>
+        }
+    }

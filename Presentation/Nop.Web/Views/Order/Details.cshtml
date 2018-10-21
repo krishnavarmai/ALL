@@ -570,74 +570,81 @@
                                 <th class="total">
                                     @T("Order.Product(s).Total")
                                 </th>
+                                <th class="total">
+                                    Status
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model.Items)
                             {
-                                <tr>
-                                    @if (Model.ShowSku)
+                            <tr>
+                                @if (Model.ShowSku)
+                                {
+                                    <td class="sku">
+                                        <label class="td-title">@T("Order.Product(s).SKU"):</label>
+                                        <span class="sku-number">@item.Sku</span>
+                                    </td>
+                                }
+                                <td class="product">
+                                    @if (!Model.PrintMode)
                                     {
-                                        <td class="sku">
-                                            <label class="td-title">@T("Order.Product(s).SKU"):</label>
-                                            <span class="sku-number">@item.Sku</span>
-                                        </td>
+                                        <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
                                     }
-                                    <td class="product">
-                                        @if (!Model.PrintMode)
-                                        {
-                                            <em><a href="@Url.RouteUrl("Product", new { SeName = item.ProductSeName })">@item.ProductName</a></em>
-                                        }
-                                        else
-                                        {
-                                            @item.ProductName
-                                        }
-                                        @if (!string.IsNullOrEmpty(item.AttributeInfo))
-                                        {
-                                            <div class="attributes">
-                                                @Html.Raw(item.AttributeInfo)
-                                            </div>
-                                        }
-                                        @if (!string.IsNullOrEmpty(item.RentalInfo))
-                                        {
-                                            <div class="rental-info">
-                                                @Html.Raw(item.RentalInfo)
-                                            </div>
-                                        }
-                                        @if (item.DownloadId > 0)
-                                        {
-                                            <div class="download">
-                                                <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
-                                            </div>
-                                        }
-                                        @if (item.LicenseId > 0)
-                                        {
-                                            <div class="download license">
-                                                <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
-                                            </div>
-                                        }
-                                        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsProductLine, additionalData = item })
-                                    </td>
-                                    @if (Model.ShowVendorName)
+                                    else
                                     {
-                                        <td class="vendor">
-                                            <label class="td-title">@T("Order.Product(s).VendorName"):</label>
-                                            <span class="vendor-name">@item.VendorName</span>
-                                        </td>
+                                        @item.ProductName
                                     }
-                                    <td class="unit-price">
-                                        <label class="td-title">@T("Order.Product(s).Price"):</label>
-                                        <span class="product-unit-price">@item.UnitPrice</span>
+                                    @if (!string.IsNullOrEmpty(item.AttributeInfo))
+                                    {
+                                        <div class="attributes">
+                                            @Html.Raw(item.AttributeInfo)
+                                        </div>
+                                    }
+                                    @if (!string.IsNullOrEmpty(item.RentalInfo))
+                                    {
+                                        <div class="rental-info">
+                                            @Html.Raw(item.RentalInfo)
+                                        </div>
+                                    }
+                                    @if (item.DownloadId > 0)
+                                    {
+                                        <div class="download">
+                                            <a href="@Url.RouteUrl("GetDownload", new { orderItemId = item.OrderItemGuid })">@T("DownloadableProducts.Fields.Download")</a>
+                                        </div>
+                                    }
+                                    @if (item.LicenseId > 0)
+                                    {
+                                        <div class="download license">
+                                            <a href="@Url.RouteUrl("GetLicense", new {orderItemId = item.OrderItemGuid})">@T("DownloadableProducts.Fields.DownloadLicense")</a>
+                                        </div>
+                                    }
+                                    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderDetailsProductLine, additionalData = item })
+                                </td>
+                                @if (Model.ShowVendorName)
+                                {
+                                    <td class="vendor">
+                                        <label class="td-title">@T("Order.Product(s).VendorName"):</label>
+                                        <span class="vendor-name">@item.VendorName</span>
                                     </td>
-                                    <td class="quantity">
-                                        <label class="td-title">@T("Order.Product(s).Quantity"):</label>
-                                        <span class="product-quantity">@item.Quantity</span>
-                                    </td>
-                                    <td class="total">
-                                        <label class="td-title">@T("Order.Product(s).Total"):</label>
-                                        <span class="product-subtotal">@item.SubTotal</span>
-                                    </td>
-                                </tr>
+                                }
+                                <td class="unit-price">
+                                    <label class="td-title">@T("Order.Product(s).Price"):</label>
+                                    <span class="product-unit-price">@item.UnitPrice</span>
+                                </td>
+                                <td class="quantity">
+                                    <label class="td-title">@T("Order.Product(s).Quantity"):</label>
+                                    <span class="product-quantity">@item.Quantity</span>
+                                </td>
+                                <td class="total">
+                                    <label class="td-title">@T("Order.Product(s).Total"):</label>
+                                    <span class="product-subtotal">@item.SubTotal</span>
+                                </td>
+                                <td class="total">
+                                    <label class="td-title">Status:</label>
+                                    <span class="product-subtotal">@item.OrderItemStatus</span>
+                                </td>
+                            </tr>
                             }
                         </tbody>
                     </table>

@@ -25,6 +25,16 @@ namespace Nop.Core.Domain.Orders
         /// </summary>
         Cancelled = 40,
 
-
+        fiveseventy=570,
+        sixtwenty=620,
+        ninehundred=900,
+        ninehundredtwo=902,
+        ninehundredfour=904,
+        ninetweleve=912,
+        ninefouteen=914,
+        nineeighty=980,
+        nineeightytwo=982,
+        nineeightyfour=984,
+        nineninenine=999
     }
 }

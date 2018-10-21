@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Nop.Core;
+using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 
 namespace Nop.Services.Orders
@@ -153,6 +154,16 @@ namespace Nop.Services.Orders
         /// <returns>Order items</returns>
         IList<OrderItem> GetDownloadableOrderItems(int customerId);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Customercode"></param>
+        /// <returns></returns>
+        IPagedList<Invoices> GetInvoices(string Customercode, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        IPagedList<Invoices> GetOpenInvoices(string Customercode, int pageIndex = 0, int pageSize = int.MaxValue);
+
+        bool UpdateInvoiceStatus(int invNumber);
         /// <summary>
         /// Delete an order item
         /// </summary>

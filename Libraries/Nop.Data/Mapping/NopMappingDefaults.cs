@@ -57,6 +57,11 @@ namespace Nop.Data.Mapping
         public static string BillToShipToTable => "BillToShipTo";
 
         /// <summary>
+        /// 
+        /// </summary>
+        public static string InvoicesTable => "Invoices";
+
+        /// <summary>
         /// Gets a name of the Customer-CustomerRole mapping table
         /// </summary>
         public static string CustomerCustomerRoleTable => "Customer_CustomerRole_Mapping";

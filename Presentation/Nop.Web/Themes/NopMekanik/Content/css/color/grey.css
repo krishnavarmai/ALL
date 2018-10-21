@@ -1,0 +1,282 @@
+﻿/* ------------ General, LINKS, BUTTONS ------------ */
+a:focus, a:hover, a:active, .post-head a:hover, .news-head a:hover, .blog-details .tags a:hover {
+    color: #ee633f;
+    text-decoration: none;
+}
+
+.post-head a, .news-head a, .blog-details .tags a {
+    color: #32434c;
+}
+
+.block .tags li a:hover, .product-tags-all-page li a:hover, .block .entity-body li a:hover {
+    border-color: #ee633f;
+    background-color: #ee633f;
+    color: #fff;
+}
+
+.button-1, .blog-posts .buttons .read-more, .news-items .buttons .read-more {
+    background-color: #ee633f;
+    color: #fff;
+    border: none;
+}
+
+    .button-1:hover, .button-2:hover, .blog-posts .buttons .read-more:hover, .news-items .buttons .read-more:hover,
+    .button-1:focus, .button-2:focus, .button-1:active, .button-2:active {
+        text-decoration: none;
+        background: #32434c;
+        color: #f7bb5e;
+    }
+
+.button-2 {
+    background: #eee;
+    color: #343434;
+    border: none;
+}
+
+.button-3 {
+    background: #32434c;
+    color: #eee;
+    border: none;
+}
+
+    .button-3:hover, .button-3:active, .button-3:focus {
+        background: #343434;
+        color: #f7bb5e;
+        border: none;
+    }
+
+.cart th, .data-table th, .forum-table th {
+    border-color: rgba(0, 0, 0, 0.25);
+    background-color: #32434c;
+    color: #fff;
+}
+
+.cart a, .data-table a, .forum-table a {
+    color: #32434c;
+}
+
+    .cart a:hover, .data-table a:hover, .forum-table a:hover {
+        color: #ee633f;
+    }
+
+tr a:hover, .breadcrumb a:hover, .product .name a:hover, .view-all a:hover {
+    color: #ee633f !important;
+}
+
+.pager li span {
+    border-color: transparent;
+    background: #32434c;
+    color: #ee633f;
+}
+/* ------------ Header, Footer------------ */
+.home-grey-sec .theme-custom .nivo-controlNav a {
+    border: 2px solid #32434c;
+}
+
+    .header-container, .home-grey-sec .theme-custom .nivo-controlNav a.active {
+        background-color: #32434c;
+    }
+
+.header-menu {
+    background-color: #ee633f;
+}
+
+.search-box .search-box-button, .product .name a, .product-review-item .review-info a, .product-review-helpfulness .vote {
+    color: #32434c;
+}
+
+    .search-box .search-box-button:hover, .flyout-cart .cd-cart-trigger span.cart-qty, .footer-powered-by a, .flyout-cart .toggle-info span.cart-qty {
+        color: #ee633f;
+    }
+
+.header-links a:hover, .home-grey-sec #bottom-widgets a:hover, .footer-block .list a:hover {
+    color: #ee633f;
+}
+
+.home-grey-sec #bottom-widgets {
+    background: #32434c;
+}
+
+.newsletter {
+    border-top: 2px solid #ee633f;
+}
+
+.popup-loadURL .page-title h1 {
+    color: #32434c;
+}
+/* ------------ Homepage ------------ */
+.home-page .topic-block-title, .home-page-product-grid .title, .bestsellers .title, .news-list-homepage .title, .home-page-polls .title, .also-purchased-products-grid .title, .related-products-grid .title, .featured-product-grid .title, .cross-sells .title, .estimate-shipping .title, .home-page-category-grid .sec-title, .page-title, .order-details-page .page-title, .product-essential .product-name {
+    border-bottom: 2px solid #eee;
+}
+
+    .home-page .topic-block-title h2, .home-page-product-grid .title strong, .bestsellers .title strong, .news-list-homepage .title strong, .home-page-polls .title strong, .also-purchased-products-grid .title strong, .related-products-grid .title strong, .featured-product-grid .title strong, .cross-sells .title strong, .estimate-shipping .title strong, .home-page-category-grid .sec-title strong, .page-title h1, .order-details-page .page-title h1, .product-essential .product-name h1 {
+        border-color: #ee633f;
+    }
+
+.home-grey-sec #home-slider-widget .topic-block-title {
+    background: #32434c;
+}
+
+    .home-grey-sec #home-slider-widget .topic-block-title h2 {
+        color: #ee633f;
+    }
+/*Products and Shopping Cart*/
+.breadcrumb .fa-home, .breadcrumb li:last-child, .breadcrumb h1 {
+    color: #32434c;
+}
+
+.block .list a.active, .block .list a:hover, .block .view-all a:hover {
+    color: #ee633f;
+}
+
+.block-category-navigation .list .active.last > a, .remove-filter a {
+    background: #ee633f;
+    color: #fff;
+}
+
+    .remove-filter a:hover, .filtered-items .title {
+        background: #32434c;
+        color: #fff;
+    }
+
+.product-selectors .product-viewmode a.selected {
+    color: #ee633f;
+}
+
+.product-selectors .product-viewmode a:hover {
+    color: #ee633f;
+    opacity: 1;
+}
+
+.color-squares .selected-value .color-container, .attribute-squares .selected-value .attribute-square-container {
+    background: #ee633f;
+}
+
+.nav-tabs .nav-item a.nav-link.active {
+    background-color: #ee633f;
+    color: #343434;
+    font-weight: bold;
+    border-color: #ee633f;
+}
+
+.nav-tabs .nav-item a.nav-link {
+    background-color: #eee;
+    color: #fff;
+    font-weight: bold;
+    border-color: #eee;
+}
+
+    .nav-tabs .nav-item a.nav-link.active {
+        background-color: #ee633f;
+        color: #fff;
+        border-color: #ee633f;
+    }
+
+    .nav-tabs .nav-item a.nav-link:hover {
+        background: #32434c;
+        border-color: #32434c;
+        color: #f7bb5e;
+    }
+
+.product-collateral .tab-content .tab-pane.inner .product-tags-list a.producttag:hover {
+    color: #ee633f;
+}
+
+.mini-shopping-cart .count a {
+    color: #ee633f;
+}
+
+    .mini-shopping-cart .count a:hover {
+        color: #ee633f;
+        text-decoration: underline;
+    }
+
+.popup-loadURL-container .b-close, .quick-view-popup .b-close {
+    background: #32434c;
+    color: #f7bb5e;
+}
+
+.item-box .actual-price, .item-box .prices span, .overview .prices .product-price span, .variant-overview .prices .product-price span, .tier-prices .item-price, .mini-shopping-cart .totals strong, .order-total strong {
+    color: #32434c;
+}
+
+.item-box .add-to-compare-list-button, .item-box .add-to-wishlist-button {
+    background: #eee;
+    color: #fff;
+}
+
+.item-box .product-box-add-to-cart-button {
+    background: #ee633f;
+    color: #fff;
+}
+
+    .item-box .product-box-add-to-cart-button:hover, .item-box .add-to-compare-list-button:hover, .item-box .add-to-wishlist-button:hover {
+        background: #32434c;
+        color: #ee633f;
+    }
+
+.mini-shopping-cart .count {
+    background-color: #32434c;
+}
+
+.opc .active .step-title .number {
+    color: #32434c;
+    background: #ee633f;
+}
+
+.opc .active .step-title .title {
+    background: #32434c;
+    color: #ee633f;
+}
+
+.opc .active .step-title {
+    background: #32434c;
+}
+
+.opc .step-title i:before {
+    color: #ee633f;
+}
+/*Notification*/
+.bar-notification.error, #dialog-notification-error, .bar-notification.error .b-close {
+    background: #a90404;
+}
+
+.bar-notification.success, #dialog-notifications-success, .bar-notification.success .b-close {
+    background: #2f840e;
+}
+
+.bar-notification.warning, #dialog-notification-warning, .bar-notification.warning .b-close {
+    background: #ee633f;
+}
+
+.quickview-message.success {
+    color: #2f840e;
+}
+
+.quickview-message.error {
+    color: #a90404;
+}
+
+@media (min-width: 992px) {
+    .header-menu > ul > li > a {
+        color: #fff;
+        border-bottom: 2px solid transparent;
+    }
+
+        .header-menu > ul > li > a:hover {
+            color: #32434c;
+            border-bottom: 2px solid #32434c;
+        }
+
+    .header-menu .sublist li:hover > a {
+        background: #ee633f;
+        color: #fff;
+    }
+}
+
+@media (max-width: 991px) {
+    .menu-toggle {
+        background-color: #ee633f;
+        color: #fff;
+    }
+}

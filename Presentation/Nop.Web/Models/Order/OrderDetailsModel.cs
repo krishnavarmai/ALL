@@ -94,7 +94,7 @@ namespace Nop.Web.Models.Order
             public int Quantity { get; set; }
             public string AttributeInfo { get; set; }
             public string RentalInfo { get; set; }
-
+            public string OrderItemStatus { get; set; }
             public string VendorName { get; set; }
 
             //downloadable product properties

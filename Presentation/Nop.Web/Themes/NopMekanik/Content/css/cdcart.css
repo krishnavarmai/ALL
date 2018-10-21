@@ -1,0 +1,169 @@
+body.overflow-hidden {
+    /* prevent 2 vertical scrollbars on ie and firefox when the cart is visible */
+    overflow: hidden;
+}
+
+/* -------------------------------- 
+
+Modules - reusable parts of our design
+
+-------------------------------- */
+.cd-container {
+    /* this class is used to horizontally align the gallery of items */
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+    .cd-container::after {
+        /* clearfix */
+        content: '';
+        display: table;
+        clear: both;
+    }
+
+.cd-img-replace {
+    /* replace text with a background-image */
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#cd-cart {
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 290px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 2000;
+    background-color: #fff;
+}
+
+@media only screen and (min-width: 760px) {
+    #cd-cart {
+        width: 300px;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    #cd-cart {
+        width: 25%;
+    }
+}
+
+#cd-cart {
+    right: -100%;
+    -webkit-transition: right 0.3s;
+    -moz-transition: right 0.3s;
+    transition: right 0.3s;
+}
+
+    #cd-cart.speed-in {
+        right: 0;
+    }
+
+@media only screen and (min-width: 1200px) {
+    #cd-cart .cd-cart-items li {
+        padding: 1em 2em;
+    }
+
+    #cd-cart .cd-item-remove {
+        right: 2em;
+    }
+}
+
+#cd-shadow-layer {
+    position: fixed;
+    min-height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 1099;
+    display: none;
+}
+
+    #cd-shadow-layer.is-visible {
+        display: block;
+        /*-webkit-animation: cd-fade-in 0.3s;
+  -moz-animation: cd-fade-in 0.3s;
+  animation: cd-fade-in 0.3s;*/
+    }
+
+/* -------------------------------- 
+
+xkeyframes 
+
+-------------------------------- */
+@-webkit-keyframes cd-fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes cd-fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes cd-fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.close-cd-cart {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    font-size: 17px !important;
+    line-height: 30px;
+    text-decoration: none;
+    text-align: center;
+    color: #fff;
+    cursor: pointer;
+}
+
+.cd-cart-header {
+    font: 400 18px/40px 'Raleway', sans-serif;
+    text-transform: uppercase;
+    height: 45px;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+#cd-shadow-layer {
+    position: fixed;
+    min-height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+    z-index: 97;
+    display: none;
+}
+
+    #cd-shadow-layer.is-visible {
+        display: block;
+        -webkit-animation: cd-fade-in 0.3s;
+        -moz-animation: cd-fade-in 0.3s;
+        animation: cd-fade-in 0.3s;
+    }

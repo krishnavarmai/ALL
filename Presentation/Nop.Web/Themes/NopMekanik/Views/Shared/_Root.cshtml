@@ -1,0 +1,85 @@
+﻿@using Nop.Core
+@inject IStoreContext storeContext
+@inject IWebHelper webHelper
+@{
+    Layout = "_Root.Head";
+
+    var currentStore = storeContext.CurrentStore.Id;
+    var settingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Configuration.ISettingService>();
+    bool quickView = settingService.GetSettingByKey<bool>("NopMekanik.QuickView", false, currentStore, true);
+
+    bool boxlayout = settingService.GetSettingByKey<bool>("NopMekanik.BoxLayout", false, currentStore, true);
+}
+@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyStartHtmlTagAfter })
+@await Html.PartialAsync("_Notifications")
+@await Html.PartialAsync("_JavaScriptDisabledWarning")
+@await Html.PartialAsync("_OldInternetExplorerWarning")
+
+
+<div @(boxlayout ? @Html.Raw(" class=\"body-background\"") : @Html.Raw(" class=\"\"") )>
+    <div @(boxlayout ? @Html.Raw(" class=\"container\"") : @Html.Raw(" class=\"\"") )>
+        <div class="master-wrapper-page">
+            @await Component.InvokeAsync("AdminHeaderLinks")
+            <div class="header-container">
+                @await Html.PartialAsync("_Header")
+                <div class="container">
+                    <div class="header-menu">
+                        @await Component.InvokeAsync("TopMenu")
+                    </div>
+                </div>
+            </div>
+            <script asp-location="Footer">
+            AjaxCart.init(false, '.header-links .cart-qty', '.header-links .wishlist-qty', '#flyout-cart');
+            @if (quickView)
+            {
+                <text>
+                $(document).ready(function () {
+                    $(".quick-view-hover").addClass('enabled');
+
+                    $('.product-item .quick-view-btn').click(function (e) {
+                        e.preventDefault();
+                        var self = $(this);
+
+                        $('.quick-view-popup').bPopup({
+                            contentContainer: '.quick-view-content',
+                            loadUrl: self.closest('.product-item').data('quickviewurl'),
+                            opacity: '0.75',
+                            modalColor: '#303030',
+                        });
+                    });
+                });
+                </text>
+            }
+            </script>
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentBefore })
+            @if (IsSectionDefined("Breadcrumb"))
+            {
+                @RenderSection("Breadcrumb")
+            }
+            <div class="master-column-wrapper">
+                <div class="container">
+                    @RenderBody()
+                </div>
+            </div>
+            @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.ContentAfter })
+            @await Component.InvokeAsync("Footer")
+        </div>
+        @await Component.InvokeAsync("EuCookieLaw")
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.BodyEndHtmlTagBefore })
+    </div>
+</div>
+@if (quickView)
+{
+    <div class="quick-view-popup">
+        <span class="b-close" title="@T("Common.Close")"><i class="fas fa-times"></i></span>
+        <div class="quick-view-content">
+        </div>
+        <div class="clearfix"></div>
+    </div>
+}
+
+<div class="popup-loadURL-container">
+    <span class="b-close" title="@T("Common.Close")"><i class="fas fa-times"></i></span>
+    <div class="popup-loadURL"></div>
+    <div class="clear"></div>
+</div>

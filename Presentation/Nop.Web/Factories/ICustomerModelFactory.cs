@@ -3,6 +3,7 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Web.Models.Customer;
+using Nop.Web.Models.Order;
 
 namespace Nop.Web.Factories
 {
@@ -118,5 +119,15 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>check gift card balance model</returns>
         CheckGiftCardBalanceModel PrepareCheckGiftCardBalanceModel();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        CustomerInvoicesListModel PrepareCustomerInvoicesListModel(CustomerInvoicesListModel customerInvoicesListModel);
+
+        CustomerInvoicesListModel PrepareCustomerOpenInvoicesListModel(CustomerInvoicesListModel customerInvoicesListModel);
+
+        bool InvoiceUpdateModel(CreditCardModel creditCard);
     }
 }

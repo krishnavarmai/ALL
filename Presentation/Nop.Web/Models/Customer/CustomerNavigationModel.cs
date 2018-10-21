@@ -38,6 +38,8 @@ namespace Nop.Web.Models.Customer
         ProductReviews = 100,
         VendorInfo = 110,
         GdprTools = 120,
-        CheckGiftCardBalance = 130
+        CheckGiftCardBalance = 130,
+        Invoices = 140,
+        OpenInvoices = 150,
     }
 }

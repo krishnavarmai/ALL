@@ -22,6 +22,7 @@ namespace Nop.Services.Orders
         private readonly IEventPublisher _eventPublisher;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IRepository<Order> _orderRepository;
+        private readonly IRepository<Invoices> _invoicesRepository;
         private readonly IRepository<OrderItem> _orderItemRepository;
         private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<Product> _productRepository;
@@ -37,6 +38,7 @@ namespace Nop.Services.Orders
             IRepository<OrderItem> orderItemRepository,
             IRepository<OrderNote> orderNoteRepository,
             IRepository<Product> productRepository,
+            IRepository<Invoices> invoicesRepository,
             IRepository<RecurringPayment> recurringPaymentRepository)
         {
             this._eventPublisher = eventPublisher;
@@ -46,6 +48,7 @@ namespace Nop.Services.Orders
             this._orderNoteRepository = orderNoteRepository;
             this._productRepository = productRepository;
             this._recurringPaymentRepository = recurringPaymentRepository;
+            this._invoicesRepository = invoicesRepository;
         }
 
         #endregion
@@ -778,6 +781,34 @@ namespace Nop.Services.Orders
             return query;
         }
 
+        public IPagedList<Invoices> GetInvoices(string Customercode, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = from rp in _invoicesRepository.Table
+                         where rp.UserName == Customercode
+                         select rp;
+           var pagedlist= new PagedList<Invoices>(query, pageIndex, pageSize);
+            return pagedlist;
+        }
+
+        public IPagedList<Invoices> GetOpenInvoices(string Customercode, int pageIndex = 0, int pageSize = int.MaxValue)
+        {
+            var query = from rp in _invoicesRepository.Table
+                        where rp.UserName == Customercode && rp.StatusId == 10
+                        select rp;
+            var pagedlist = new PagedList<Invoices>(query, pageIndex, pageSize);
+            return pagedlist;
+        }
+
+        public bool UpdateInvoiceStatus(int invNumber)
+        {
+            var invoice = _invoicesRepository.Table.FirstOrDefault(o => o.InvoiceNum == invNumber.ToString());
+            invoice.StatusId = 620;
+            _invoicesRepository.Update(invoice);
+
+            //event notification
+            _eventPublisher.EntityUpdated(invoice);
+            return true;
+        }
         #endregion
 
         #endregion

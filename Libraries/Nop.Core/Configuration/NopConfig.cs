@@ -95,5 +95,7 @@ namespace Nop.Core.Configuration
         /// By default the cookie-based TempData provider is used to store TempData in cookies.
         /// </summary>
         public bool UseSessionStateTempDataProvider { get; set; }
+
+        public string JDEStatusCodes { get; set; }
     }
 }

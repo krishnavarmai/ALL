@@ -40,6 +40,7 @@ using Nop.Web.Framework.Security;
 using Nop.Web.Framework.Security.Captcha;
 using Nop.Web.Framework.Validators;
 using Nop.Web.Models.Customer;
+using Nop.Web.Models.Order;
 
 namespace Nop.Web.Controllers
 {
@@ -951,6 +952,61 @@ namespace Nop.Web.Controllers
             return View(model);
         }
 
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult Invoices()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+            var customerInvoicesListModel = new CustomerInvoicesListModel();
+            return View(customerInvoicesListModel);
+        }
+        [HttpPost]
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult InvoicesList(CustomerInvoicesListModel customerInvoicesListModel )
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+           // var customerInvoicesListModel = new CustomerInvoicesListModel();
+            var model = _customerModelFactory.PrepareCustomerInvoicesListModel(customerInvoicesListModel)?.InvoicesList;
+            //prepare model
+
+            return Json(model);
+        }
+
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult OpenInvoices()
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+            var customerInvoicesListModel = new CustomerInvoicesListModel();
+            return View(customerInvoicesListModel);
+        }
+        [HttpPost]
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult OpenInvoicesList(CustomerInvoicesListModel customerInvoicesListModel)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+
+            // var customerInvoicesListModel = new CustomerInvoicesListModel();
+            var model = _customerModelFactory.PrepareCustomerOpenInvoicesListModel(customerInvoicesListModel)?.InvoicesList;
+            //prepare model
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        [HttpsRequirement(SslRequirement.Yes)]
+        public virtual IActionResult SubmitPaymentList(CreditCardModel cardDetails)
+        {
+            if (!_workContext.CurrentCustomer.IsRegistered())
+                return Challenge();
+            bool retVal = _customerModelFactory.InvoiceUpdateModel(cardDetails);
+            
+            return Json(retVal);
+        }
+
         [HttpPost]
         [PublicAntiForgery]
         public virtual IActionResult Info(CustomerInfoModel model)
@@ -1683,4 +1739,5 @@ namespace Nop.Web.Controllers
 
         #endregion
     }
+    
 }
