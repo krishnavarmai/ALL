@@ -32,63 +32,7 @@
                             <div id="forumgroup-grid"></div>
                             
                             <script>
-                        $(document).ready(function() {
-                            $("#forumgroup-grid").kendoGrid({
-                                columns: [
-                                    {
-                                        field: "InvoiceNum",
-                                        title: "InvoiceNum",
-                                        width: 300
-                                    }, {
-                                        field: "InvDate",
-                                        title: "InvDate",
-                                        type: "date",
-                                        format: "{0:G}",
-                                        width: 100
-                                    }, {
-                                        field: "Amount",
-                                        title: "Amount",
-                                        width: 200,
-                                    }, {
-                                        field: "Status",
-                                        title: "Status",
-                                        width: 200,
-                                    }, {
-                                        field: "Id",
-                                        title: "Edit",
-                                        width: 80,
-                                        headerAttributes: { style: "text-align:center" },
-                                        attributes: { style: "text-align:center" },
-                                        template: '<a class="btn btn-default" href="EditForumGroup/#=Id#"><i class="fa fa-pencil"></i>@T("Admin.Common.Edit")</a>'
-                                    }
-                                ],
-                                dataSource: {
-                                    type: "json",
-                                    transport: {
-                                        read: {
-                                            url: "@Html.Raw(Url.Action("InvoicesList", "Customer"))",
-                                            type: "POST",
-                                            dataType: "json",
-                                            data: addAntiForgeryToken
-                                        }
-                                    },
-                                    pageable: true,
-                                    serverPaging: false,
-                                    pageSize: 5
-                                },
-                                pageable: {
-                                    refresh: true,
-                                    alwaysVisible: false,
-                                    pageSizes: true
-                                    
-                                },
-                                //details grid
-                                //detailInit: detailInit,
-                                scrollable: false,
-
-                                
-                            });
-                        });
+                        
 
                             </script>
                         </div>

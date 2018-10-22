@@ -36,6 +36,18 @@ namespace Nop.Services.Catalog
         private readonly ShoppingCartSettings _shoppingCartSettings;
         private readonly IRepository<CategoryCodeDiscounts> _CategoryCodeDiscountsRepository;
         private readonly IRepository<BillToShipToMapping> _BillToShipToMappingRepository;
+        private CatalogSettings catalogSettings;
+        private CurrencySettings currencySettings;
+        private ICategoryService object1;
+        private ICurrencyService object2;
+        private IDiscountService object3;
+        private IManufacturerService object4;
+        private IProductAttributeParser object5;
+        private IProductService object6;
+        private MemoryCacheManager memoryCacheManager;
+        private IStoreContext object7;
+        private IWorkContext object8;
+        private ShoppingCartSettings shoppingCartSettings;
 
         #endregion
 
@@ -70,6 +82,22 @@ namespace Nop.Services.Catalog
             this._shoppingCartSettings = shoppingCartSettings;
             this._CategoryCodeDiscountsRepository = CategoryCodeDiscountsRepository;
             this._BillToShipToMappingRepository = BillToShipToMappingRepository;
+        }
+
+        public PriceCalculationService(CatalogSettings catalogSettings, CurrencySettings currencySettings, ICategoryService object1, ICurrencyService object2, IDiscountService object3, IManufacturerService object4, IProductAttributeParser object5, IProductService object6, MemoryCacheManager memoryCacheManager, IStoreContext object7, IWorkContext object8, ShoppingCartSettings shoppingCartSettings)
+        {
+            this.catalogSettings = catalogSettings;
+            this.currencySettings = currencySettings;
+            this.object1 = object1;
+            this.object2 = object2;
+            this.object3 = object3;
+            this.object4 = object4;
+            this.object5 = object5;
+            this.object6 = object6;
+            this.memoryCacheManager = memoryCacheManager;
+            this.object7 = object7;
+            this.object8 = object8;
+            this.shoppingCartSettings = shoppingCartSettings;
         }
 
         #endregion

@@ -662,18 +662,12 @@ namespace Nop.Web.Factories
                 Tab = CustomerNavigationEnum.Orders,
                 ItemClass = "customer-orders"
             });
+           
             model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
             {
                 RouteName = "CustomerInvoices",
                 Title = "Invoices",
                 Tab = CustomerNavigationEnum.Invoices,
-                ItemClass = "customer-orders"
-            });
-            model.CustomerNavigationItems.Add(new CustomerNavigationItemModel
-            {
-                RouteName = "CustomerOpenInvoices",
-                Title = "OpenInvoices",
-                Tab = CustomerNavigationEnum.OpenInvoices,
                 ItemClass = "customer-orders"
             });
             if (_orderSettings.ReturnRequestsEnabled &&
