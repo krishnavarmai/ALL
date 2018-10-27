@@ -6,8 +6,8 @@
 @inject IWorkContext workContext
 @inject OrderSettings orderSettings
 <div class="order-summary-content">
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore })
-    @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)
+    @*@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentBefore })
+    @await Html.PartialAsync("_OrderReviewData", Model.OrderReviewData)*@
     @if (Model.Items.Count > 0)
     {
         if (Model.Warnings.Count > 0)
@@ -314,7 +314,7 @@
                                 <td colspan="3" class="shade">
                                     @await Html.PartialAsync("_GiftCardBox", Model.GiftCardBox)
                                 </td>
-                                @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals })
+                                @*@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentDeals })*@
                             </tr>
                         }
                         <tr class="no-border">
@@ -389,7 +389,7 @@
                             </div>
                         }
                             <div class="checkout-buttons">
-                                <input type="text" name="PO_RefNo" id="PO_RefNo" value="@Model.PO_RefNo" /><br />
+                                <br />
                                 @if (string.IsNullOrEmpty(Model.MinOrderSubtotalWarning) && !Model.HideCheckoutButton)
                                 {
                                     <script asp-location="Footer">
@@ -418,9 +418,26 @@
                                     }
                                     else
                                     {
-                                        <button type="submit" id="checkout" name="checkout" value="checkout" class="button-3 checkout-button">
-                                            @T("Checkout.Button")
-                                        </button>
+
+                                        <div class="checkout-attributes" style="width:100%">
+                                            <div style="float:right;">
+                                                <div id="checkout_attribute_label_1">
+                                                    <label class="text-prompt">
+                                                        PO Reference No: &nbsp;
+                                                    </label>
+                                                </div>
+                                                <div id="checkout_attribute_input_1">
+                                                    <input type="text" name="PO_RefNo" id="PO_RefNo" value="@Model.PO_RefNo" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <div style="width:100%; float:right">
+                                            <button type="submit" id="checkout" name="checkout" value="checkout" class="button-3 checkout-button">
+                                                @T("Checkout.Button")
+                                            </button>
+                                        </div>
                                     }
                                 }
                             </div>
@@ -453,5 +470,5 @@
             @T("ShoppingCart.CartIsEmpty")
         </div>
     }
-    @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentAfter })
+    @*@await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OrderSummaryContentAfter })*@
 </div>
