@@ -354,6 +354,7 @@ namespace Nop.Web.Factories
                 ProductName = _localizationService.GetLocalized(sci.Product, x => x.Name),
                 ProductSeName = _urlRecordService.GetSeName(sci.Product),
                 Quantity = sci.Quantity,
+                ListPrice = sci.Product?.Price.ToString("0.00"),
                 AttributeInfo = _productAttributeFormatter.FormatAttributes(sci.Product, sci.AttributesXml),
             };
 

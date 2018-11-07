@@ -76,6 +76,8 @@ namespace Nop.Services.Payments
         /// </summary>
         public string CreditCardCvv2 { get; set; }
 
+        public string CustomerEmail { get; set; }
+
         #endregion
 
         #region Recurring payments
@@ -101,6 +103,7 @@ namespace Nop.Services.Payments
         public int RecurringTotalCycles { get; set; }
 
         #endregion
+
 
         /// <summary>
         /// You can store any custom value in this property

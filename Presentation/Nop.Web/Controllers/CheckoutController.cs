@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -987,29 +988,29 @@ namespace Nop.Web.Controllers
 
         protected virtual JsonResult OpcLoadStepAfterShippingAddress(List<ShoppingCartItem> cart)
         {
-            var shippingMethodModel = _checkoutModelFactory.PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
-            if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
-                shippingMethodModel.ShippingMethods.Count == 1)
-            {
-                //if we have only one shipping method, then a customer doesn't have to choose a shipping method
-                _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
-                    NopCustomerDefaults.SelectedShippingOptionAttribute,
-                    shippingMethodModel.ShippingMethods.First().ShippingOption,
-                    _storeContext.CurrentStore.Id);
+           // var shippingMethodModel = _checkoutModelFactory.PrepareShippingMethodModel(cart, _workContext.CurrentCustomer.ShippingAddress);
+            //if (_shippingSettings.BypassShippingMethodSelectionIfOnlyOne &&
+            //    shippingMethodModel?.ShippingMethods.Count == 1)
+            //{
+            //    //if we have only one shipping method, then a customer doesn't have to choose a shipping method
+            //    _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
+            //        NopCustomerDefaults.SelectedShippingOptionAttribute,
+            //        shippingMethodModel.ShippingMethods.First().ShippingOption,
+            //        _storeContext.CurrentStore.Id);
 
-                //load next step
-                return OpcLoadStepAfterShippingMethod(cart);
-            }
-
-            return Json(new
-            {
-                update_section = new UpdateSectionJsonModel
-                {
-                    name = "shipping-method",
-                    html = RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
-                },
-                goto_section = "shipping_method"
-            });
+            //    //load next step
+            //    return OpcLoadStepAfterShippingMethod(cart);
+            //}
+            return OpcLoadStepAfterShippingMethod(cart);
+            //return Json(new
+            //{
+            //    update_section = new UpdateSectionJsonModel
+            //    {
+            //        name = "shipping-method",
+            //        html = RenderPartialViewToString("OpcShippingMethods", shippingMethodModel)
+            //    },
+            //    goto_section = "shipping_method"
+            //});
         }
 
         protected virtual JsonResult OpcLoadStepAfterShippingMethod(List<ShoppingCartItem> cart)
@@ -1084,6 +1085,41 @@ namespace Nop.Web.Controllers
         {
             if (paymentMethod.SkipPaymentInfo ||
                 (paymentMethod.PaymentMethodType == PaymentMethodType.Redirection && _paymentSettings.SkipPaymentInfoStepForRedirectionPaymentMethods))
+            {
+                //skip payment info page
+                var paymentInfo = new ProcessPaymentRequest();
+
+                //session save
+                HttpContext.Session.Set("OrderPaymentInfo", paymentInfo);
+
+                var confirmOrderModel = _checkoutModelFactory.PrepareConfirmOrderModel(cart);
+                return Json(new
+                {
+                    update_section = new UpdateSectionJsonModel
+                    {
+                        name = "confirm-order",
+                        html = RenderPartialViewToString("OpcConfirmOrder", confirmOrderModel)
+                    },
+                    goto_section = "confirm_order"
+                });
+            }
+
+            //return payment info page
+            var paymenInfoModel = _checkoutModelFactory.PreparePaymentInfoModel(paymentMethod);
+            return Json(new
+            {
+                update_section = new UpdateSectionJsonModel
+                {
+                    name = "payment-info",
+                    html = RenderPartialViewToString("OpcPaymentInfo", paymenInfoModel)
+                },
+                goto_section = "payment_info"
+            });
+        }
+
+        protected virtual JsonResult OpcLoadStepAfterPaymentMethod(string paymentMethod, List<ShoppingCartItem> cart)
+        {
+            if (paymentMethod == "Payment Terms")
             {
                 //skip payment info page
                 var paymentInfo = new ProcessPaymentRequest();
@@ -1544,18 +1580,18 @@ namespace Nop.Web.Controllers
                     });
                 }
 
-                var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
-                if (paymentMethodInst == null ||
-                    !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
-                    !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
-                    !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
-                    throw new Exception("Selected payment method can't be parsed");
+                //var paymentMethodInst = _paymentService.LoadPaymentMethodBySystemName(paymentmethod);
+                //if (paymentMethodInst == null ||
+                //    !_paymentService.IsPaymentMethodActive(paymentMethodInst) ||
+                //    !_pluginFinder.AuthenticateStore(paymentMethodInst.PluginDescriptor, _storeContext.CurrentStore.Id) ||
+                //    !_pluginFinder.AuthorizedForUser(paymentMethodInst.PluginDescriptor, _workContext.CurrentCustomer))
+                //    throw new Exception("Selected payment method can't be parsed");
 
                 //save
                 _genericAttributeService.SaveAttribute(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, paymentmethod, _storeContext.CurrentStore.Id);
 
-                return OpcLoadStepAfterPaymentMethod(paymentMethodInst, cart);
+                return OpcLoadStepAfterPaymentMethod(paymentmethod, cart);
             }
             catch (Exception exc)
             {
@@ -1587,6 +1623,10 @@ namespace Nop.Web.Controllers
 
                 var paymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
+                if(paymentMethodSystemName=="Credit Card")
+                {
+                    paymentMethodSystemName = "Payments.Manual";
+                }
                 var paymentMethod = _paymentService.LoadPaymentMethodBySystemName(paymentMethodSystemName);
                 if (paymentMethod == null)
                     throw new Exception("Payment method is not selected");
@@ -1632,7 +1672,7 @@ namespace Nop.Web.Controllers
             }
         }
 
-        public virtual IActionResult OpcConfirmOrder()
+        public  virtual IActionResult OpcConfirmOrder()
         {
             try
             {
@@ -1662,16 +1702,17 @@ namespace Nop.Web.Controllers
                 if (processPaymentRequest == null)
                 {
                     //Check whether payment workflow is required
-                    if (_orderProcessingService.IsPaymentWorkflowRequired(cart))
-                    {
-                        throw new Exception("Payment information is not entered");
-                    }
+                    //if (_orderProcessingService.IsPaymentWorkflowRequired(cart))
+                    //{
+                    //    throw new Exception("Payment information is not entered");
+                    //}
 
                     processPaymentRequest = new ProcessPaymentRequest();
                 }
 
                 processPaymentRequest.StoreId = _storeContext.CurrentStore.Id;
                 processPaymentRequest.CustomerId = _workContext.CurrentCustomer.Id;
+                processPaymentRequest.CustomerEmail = _workContext.CurrentCustomer.Email;
                 processPaymentRequest.PaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
                     NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
                 processPaymentRequest.PO_RefNo = _workContext.CurrentCustomer.PO_RefNo;

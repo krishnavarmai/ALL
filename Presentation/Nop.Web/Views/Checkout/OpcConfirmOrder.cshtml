@@ -25,7 +25,7 @@
     }
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.OpCheckoutConfirmBottom })
         <div class="section order-summary">
-            @*@await Component.InvokeAsync("OrderSummary", new { overriddenModel = Model.shoppingCartModel })*@
+            @await Component.InvokeAsync("OrderSummary")
         </div>
     @if (string.IsNullOrEmpty(Model.MinOrderTotalWarning) && Model.TermsOfServiceOnOrderConfirmPage)
     {

@@ -25,6 +25,8 @@ namespace Nop.Web.Areas.Admin.Models.ShoppingCart
         [NopResourceDisplayName("Admin.CurrentCarts.UnitPrice")]
         public string UnitPrice { get; set; }
 
+        public string ListPrice { get; set; }
+
         [NopResourceDisplayName("Admin.CurrentCarts.Quantity")]
         public int Quantity { get; set; }
 

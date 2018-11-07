@@ -217,6 +217,13 @@ namespace Nop.Services.Plugins
                 .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
         }
 
+        public virtual PluginDescriptor GetPluginDescriptorBySystemName<T>(string systemName)
+           where T : class, IPlugin
+        {
+            return GetPluginDescriptors<T>()
+                .SingleOrDefault(p => p.SystemName.Equals(systemName, StringComparison.InvariantCultureIgnoreCase));
+        }
+
         /// <summary>
         /// Reload plugins after updating
         /// </summary>

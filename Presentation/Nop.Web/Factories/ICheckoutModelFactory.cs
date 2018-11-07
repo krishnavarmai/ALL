@@ -81,5 +81,7 @@ namespace Nop.Web.Factories
         /// <param name="cart">Cart</param>
         /// <returns>One page checkout model</returns>
         OnePageCheckoutModel PrepareOnePageCheckoutModel(IList<ShoppingCartItem> cart);
+
+        CheckoutPaymentInfoModel PreparePaymentInfoModel(string paymentMethod);
     }
 }

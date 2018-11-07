@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -998,12 +999,13 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual IActionResult SubmitPaymentList(CreditCardModel cardDetails)
+        public virtual  IActionResult  SubmitPaymentList(CreditCardModel cardDetails)
         {
+            
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
-            bool retVal = _customerModelFactory.InvoiceUpdateModel(cardDetails);
-            
+            cardDetails.EmailId = _workContext.CurrentCustomer.Email;
+            var retVal = _customerModelFactory.InvoiceUpdateModel(cardDetails);
             return Json(retVal);
         }
 

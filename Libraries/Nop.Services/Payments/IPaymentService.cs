@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 
@@ -194,5 +195,6 @@ namespace Nop.Services.Payments
         Dictionary<string, object> DeserializeCustomValues(Order order);
 
         #endregion
+
     }
 }

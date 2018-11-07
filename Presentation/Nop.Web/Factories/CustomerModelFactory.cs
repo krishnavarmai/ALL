@@ -982,19 +982,28 @@ namespace Nop.Web.Factories
 
         public bool InvoiceUpdateModel(CreditCardModel creditCard)
         {
-            string[] invoices = creditCard.InvoiceIds.Split(';');
-            foreach(string inv in invoices)
+            string[] invoices =  creditCard.InvoiceIds.Split(';');
+            Tuple<string, bool> result = _orderService.ApplyCreditCardDetails(creditCard.CardNumber,creditCard.ExpiryMonth,creditCard.ExpiryYear,creditCard.CVV, creditCard.InvoiceIds,creditCard.EmailId ,creditCard.Amount);
+            if (result.Item2)
             {
-                int invoiceNum = 0;
-                int.TryParse(inv, out invoiceNum);
-                if(invoiceNum>0)
+                foreach (string inv in invoices)
                 {
-                    if(!_orderService.UpdateInvoiceStatus(invoiceNum))
-                    { return false; }
+                    int invoiceNum = 0;
+                    int.TryParse(inv, out invoiceNum);
+                    if (invoiceNum > 0)
+                    {
+                        if (!_orderService.UpdateInvoiceStatus(invoiceNum))
+                        { return false; }
+                    }
                 }
+                return true;
             }
-            return true;
+            else
+            {
+                return false;
+            }
         }
+
 
         #endregion
     }

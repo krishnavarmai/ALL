@@ -358,73 +358,28 @@ namespace Nop.Web.Factories
         {
             var model = new CheckoutPaymentMethodModel();
 
-            //reward points
-            if (_rewardPointsSettings.Enabled && !_shoppingCartService.ShoppingCartIsRecurring(cart))
+            var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
             {
-                var rewardPointsBalance = _rewardPointService.GetRewardPointsBalance(_workContext.CurrentCustomer.Id, _storeContext.CurrentStore.Id);
-                rewardPointsBalance = _rewardPointService.GetReducedPointsBalance(rewardPointsBalance);
+                Name = "Payment Terms",
+                Description = "Payment Terms",
+                PaymentMethodSystemName = "Payment Terms",
+                LogoUrl = "/images/shoppingcart/PaymentTerms.jpg"
+            };
 
-                var rewardPointsAmountBase = _orderTotalCalculationService.ConvertRewardPointsToAmount(rewardPointsBalance);
-                var rewardPointsAmount = _currencyService.ConvertFromPrimaryStoreCurrency(rewardPointsAmountBase, _workContext.WorkingCurrency);
-                if (rewardPointsAmount > decimal.Zero &&
-                    _orderTotalCalculationService.CheckMinimumRewardPointsToUseRequirement(rewardPointsBalance))
-                {
-                    model.DisplayRewardPoints = true;
-                    model.RewardPointsAmount = _priceFormatter.FormatPrice(rewardPointsAmount, true, false);
-                    model.RewardPointsBalance = rewardPointsBalance;
+            model.PaymentMethods.Add(pmModel);
 
-                    //are points enough to pay for entire order? like if this option (to use them) was selected
-                    model.RewardPointsEnoughToPayForOrder = !_orderProcessingService.IsPaymentWorkflowRequired(cart, true);
-                }
-            }
-
-            //filter by country
-            var paymentMethods = _paymentService
-                .LoadActivePaymentMethods(_workContext.CurrentCustomer, _storeContext.CurrentStore.Id, filterByCountryId)
-                .Where(pm => pm.PaymentMethodType == PaymentMethodType.Standard || pm.PaymentMethodType == PaymentMethodType.Redirection)
-                .Where(pm => !pm.HidePaymentMethod(cart))
-                .ToList();
-            foreach (var pm in paymentMethods)
+            var pmModel1 = new CheckoutPaymentMethodModel.PaymentMethodModel
             {
-                if (_shoppingCartService.ShoppingCartIsRecurring(cart) && pm.RecurringPaymentType == RecurringPaymentType.NotSupported)
-                    continue;
+                Name = "Credit Card",
+                Description = "Credit Card",
+                PaymentMethodSystemName = "Credit Card",
+                LogoUrl = "/images/shoppingcart/cards.jpg"
+            };
 
-                var pmModel = new CheckoutPaymentMethodModel.PaymentMethodModel
-                {
-                    Name = _localizationService.GetLocalizedFriendlyName(pm, _workContext.WorkingLanguage.Id),
-                    Description = _paymentSettings.ShowPaymentMethodDescriptions ? pm.PaymentMethodDescription : string.Empty,
-                    PaymentMethodSystemName = pm.PluginDescriptor.SystemName,
-                    LogoUrl = PluginManager.GetLogoUrl(pm.PluginDescriptor)
-                };
-                //payment method additional fee
-                var paymentMethodAdditionalFee = _paymentService.GetAdditionalHandlingFee(cart, pm.PluginDescriptor.SystemName);
-                var rateBase = _taxService.GetPaymentMethodAdditionalFee(paymentMethodAdditionalFee, _workContext.CurrentCustomer);
-                var rate = _currencyService.ConvertFromPrimaryStoreCurrency(rateBase, _workContext.WorkingCurrency);
-                if (rate > decimal.Zero)
-                    pmModel.Fee = _priceFormatter.FormatPaymentMethodAdditionalFee(rate, true);
-
-                model.PaymentMethods.Add(pmModel);
-            }
-
-            //find a selected (previously) payment method
-            var selectedPaymentMethodSystemName = _genericAttributeService.GetAttribute<string>(_workContext.CurrentCustomer,
-                NopCustomerDefaults.SelectedPaymentMethodAttribute, _storeContext.CurrentStore.Id);
-            if (!string.IsNullOrEmpty(selectedPaymentMethodSystemName))
-            {
-                var paymentMethodToSelect = model.PaymentMethods.ToList()
-                    .Find(pm => pm.PaymentMethodSystemName.Equals(selectedPaymentMethodSystemName, StringComparison.InvariantCultureIgnoreCase));
-                if (paymentMethodToSelect != null)
-                    paymentMethodToSelect.Selected = true;
-            }
-            //if no option has been selected, let's do it for the first one
-            if (model.PaymentMethods.FirstOrDefault(so => so.Selected) == null)
-            {
-                var paymentMethodToSelect = model.PaymentMethods.FirstOrDefault();
-                if (paymentMethodToSelect != null)
-                    paymentMethodToSelect.Selected = true;
-            }
+            model.PaymentMethods.Add(pmModel1);
 
             return model;
+
         }
 
         /// <summary>
@@ -437,6 +392,15 @@ namespace Nop.Web.Factories
             return new CheckoutPaymentInfoModel
             {
                 PaymentViewComponentName = paymentMethod.GetPublicViewComponentName(),
+                DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab
+            };
+        }
+
+        public virtual CheckoutPaymentInfoModel PreparePaymentInfoModel(string paymentMethod)
+        {
+            return new CheckoutPaymentInfoModel
+            {
+                PaymentViewComponentName = "PaymentManual",
                 DisplayOrderTotals = _orderSettings.OnePageCheckoutDisplayOrderTotalsOnPaymentInfoTab
             };
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using Nop.Core;
@@ -27,7 +28,7 @@ namespace Nop.Services.Payments
         private readonly ISettingService _settingService;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShoppingCartSettings _shoppingCartSettings;
-
+        private readonly IUPayService _uPayService;
         #endregion
 
         #region Ctor
@@ -35,12 +36,15 @@ namespace Nop.Services.Payments
         public PaymentService(IPluginFinder pluginFinder,
             ISettingService settingService,
             PaymentSettings paymentSettings,
-            ShoppingCartSettings shoppingCartSettings)
+            ShoppingCartSettings shoppingCartSettings,
+            IUPayService uPayService
+            )
         {
             this._pluginFinder = pluginFinder;
             this._settingService = settingService;
             this._paymentSettings = paymentSettings;
             this._shoppingCartSettings = shoppingCartSettings;
+            this._uPayService = uPayService;
         }
 
         #endregion
@@ -186,7 +190,29 @@ namespace Nop.Services.Payments
             if (paymentMethod == null)
                 throw new NopException("Payment method couldn't be loaded");
 
-            return paymentMethod.ProcessPayment(processPaymentRequest);
+            if(processPaymentRequest.PaymentMethodSystemName=="Payments.CheckMoneyOrder")
+                return paymentMethod.ProcessPayment(processPaymentRequest);
+            Tuple<string, bool> task = ApplyCreditCardDetails(processPaymentRequest.CreditCardNumber, processPaymentRequest.CreditCardExpireMonth, processPaymentRequest.CreditCardExpireYear, processPaymentRequest.CreditCardCvv2, processPaymentRequest.PO_RefNo, processPaymentRequest.CustomerEmail,Convert.ToDouble(processPaymentRequest.OrderTotal));
+
+            if (task.Item2)
+            {
+                var result = new ProcessPaymentResult
+                {
+                    NewPaymentStatus = PaymentStatus.Paid,
+                    
+                };
+                return result;
+            }
+            else
+            {
+                var result = new ProcessPaymentResult
+                {
+                    NewPaymentStatus = PaymentStatus.Pending,
+                };
+                result.Errors.Add(task.Item1);
+                return result;
+            }
+           // return paymentMethod.ProcessPayment(processPaymentRequest);
         }
 
         /// <summary>
@@ -517,6 +543,12 @@ namespace Nop.Services.Payments
                     return new Dictionary<string, object>();
                 }
             }
+        }
+
+
+        private Tuple<string, bool> ApplyCreditCardDetails(string cardNo, int expMonth, int expYear, string cvv, string poRefNo, string Email, double amount)
+        {
+            return _uPayService.ApplyCreditCardDetails(cardNo, expMonth, expYear, cvv, poRefNo, Email, amount);
         }
 
         #endregion

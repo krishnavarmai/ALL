@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Data;
 using Nop.Core.Domain.Catalog;
@@ -9,6 +10,8 @@ using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Orders;
 using Nop.Core.Html;
 using Nop.Services.Events;
+using Nop.Services.Payments;
+using UPayServiceReference;
 
 namespace Nop.Services.Orders
 {
@@ -27,7 +30,7 @@ namespace Nop.Services.Orders
         private readonly IRepository<OrderNote> _orderNoteRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<RecurringPayment> _recurringPaymentRepository;
-
+        private readonly IUPayService _uPayService;
         #endregion
 
         #region Ctor
@@ -39,7 +42,8 @@ namespace Nop.Services.Orders
             IRepository<OrderNote> orderNoteRepository,
             IRepository<Product> productRepository,
             IRepository<Invoices> invoicesRepository,
-            IRepository<RecurringPayment> recurringPaymentRepository)
+            IRepository<RecurringPayment> recurringPaymentRepository,
+            IUPayService uPayService)
         {
             this._eventPublisher = eventPublisher;
             this._customerRepository = customerRepository;
@@ -49,6 +53,7 @@ namespace Nop.Services.Orders
             this._productRepository = productRepository;
             this._recurringPaymentRepository = recurringPaymentRepository;
             this._invoicesRepository = invoicesRepository;
+            this._uPayService = uPayService;
         }
 
         #endregion
@@ -797,6 +802,11 @@ namespace Nop.Services.Orders
                         select rp;
             var pagedlist = new PagedList<Invoices>(query, pageIndex, pageSize);
             return pagedlist;
+        }
+
+        public  Tuple<string,bool> ApplyCreditCardDetails(string cardNo,int expMonth,int expYear,string cvv,string poRefNo,string Email,double amount)
+        {
+           return _uPayService.ApplyCreditCardDetails(cardNo, expMonth, expYear, cvv, poRefNo, Email, amount);
         }
 
         public bool UpdateInvoiceStatus(int invNumber)

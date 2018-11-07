@@ -89,5 +89,7 @@ namespace Nop.Services.Plugins
         /// </summary>
         /// <param name="pluginDescriptor">Updated plugin descriptor</param>
         void ReloadPlugins(PluginDescriptor pluginDescriptor);
+
+
     }
 }

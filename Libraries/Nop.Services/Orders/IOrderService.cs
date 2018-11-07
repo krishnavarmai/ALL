@@ -276,5 +276,18 @@ namespace Nop.Services.Orders
             int pageIndex = 0, int pageSize = int.MaxValue, bool showHidden = false);
 
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cardNo"></param>
+        /// <param name="expMonth"></param>
+        /// <param name="expYear"></param>
+        /// <param name="cvv"></param>
+        /// <param name="poRefNo"></param>
+        /// <param name="Email"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        Tuple<string, bool> ApplyCreditCardDetails(string cardNo, int expMonth, int expYear, string cvv, string poRefNo, string Email, double amount);
     }
 }

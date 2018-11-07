@@ -171,7 +171,7 @@
                                         cache: false,
                                         type: "POST",
                                         url: "@Html.Raw(Url.Action("SubmitPaymentList", "Customer"))",
-                                        data: { "InvoiceIds": InvoiceNums, "CardNumber": $("#CreditCard").val(), "CVV": $("#CVV").val(), "ExpiryMonth": $("#ExpiryMonth").val(), "ExpiryYear": $("#ExpiryYear").val() },
+                                        data: { "InvoiceIds": InvoiceNums, "CardNumber": $("#CreditCard").val(), "CVV": $("#CVV").val(), "ExpiryMonth": $("#ExpiryMonth").val(), "ExpiryYear": $("#ExpiryYear").val(), "Amount": $("#TotalAmount").val() },
                                         success: function (data) {
                                             if (data == true) {
                                                 location.reload();
@@ -181,9 +181,10 @@
                                                 $("#ExpiryYear").val("");
                                                 $("#TotalAmount").val("");
                                                 $("#InvoiceNums").val("");
+                                                alert("Sucessfully processed invoices.");
                                             }
                                             else {
-                                                alert("Something went wrong please contact admin.")
+                                                alert("Something went wrong please contact admin.");
                                             }
                                             statesProgress.hide();
                                         },

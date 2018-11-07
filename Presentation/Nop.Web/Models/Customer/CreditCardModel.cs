@@ -7,6 +7,8 @@ namespace Nop.Web.Models.Order
 {
     public partial class CreditCardModel 
     {
+        public string EmailId { get; set; }
+        public double Amount { get; set; }
         public string InvoiceIds { get; set; }
         public string CardNumber { get; set; }
         public string CVV { get; set; }

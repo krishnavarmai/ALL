@@ -182,6 +182,7 @@ namespace Nop.Web.Areas.Admin.Factories
                     itemModel.Store = _storeService.GetStoreById(item.StoreId)?.Name ?? "Deleted";
                     itemModel.AttributeInfo = _productAttributeFormatter.FormatAttributes(item.Product, item.AttributesXml, item.Customer);
                     var unitPrice = _priceCalculationService.GetUnitPrice(item);
+                    itemModel.ListPrice = item.Product?.Price.ToString();
                     itemModel.UnitPrice = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, unitPrice, out var _));
                     var subTotal = _priceCalculationService.GetSubTotal(item);
                     itemModel.Total = _priceFormatter.FormatPrice(_taxService.GetProductPrice(item.Product, subTotal, out _));

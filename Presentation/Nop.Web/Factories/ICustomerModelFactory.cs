@@ -128,6 +128,6 @@ namespace Nop.Web.Factories
 
         CustomerInvoicesListModel PrepareCustomerOpenInvoicesListModel(CustomerInvoicesListModel customerInvoicesListModel);
 
-        bool InvoiceUpdateModel(CreditCardModel creditCard);
+        bool InvoiceUpdateModel(CreditCardModel creditCard);        
     }
 }

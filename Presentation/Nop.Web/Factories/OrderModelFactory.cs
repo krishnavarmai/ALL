@@ -414,6 +414,7 @@ namespace Nop.Web.Factories
                     ProductName = _localizationService.GetLocalized(orderItem.Product, x => x.Name),
                     ProductSeName = _urlRecordService.GetSeName(orderItem.Product),
                     Quantity = orderItem.Quantity,
+                    
                     AttributeInfo = orderItem.AttributeDescription,
                 };
                 //rental info

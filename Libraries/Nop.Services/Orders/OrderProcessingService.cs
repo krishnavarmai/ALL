@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Nop.Core;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
@@ -1373,7 +1374,7 @@ namespace Nop.Services.Orders
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <param name="details">Place order container</param>
         /// <returns></returns>
-        protected virtual ProcessPaymentResult GetProcessPaymentResult(ProcessPaymentRequest processPaymentRequest, PlaceOrderContainer details)
+        protected virtual  ProcessPaymentResult GetProcessPaymentResult(ProcessPaymentRequest processPaymentRequest, PlaceOrderContainer details)
         {
             //process payment
             ProcessPaymentResult processPaymentResult;
@@ -1381,6 +1382,14 @@ namespace Nop.Services.Orders
             var skipPaymentWorkflow = details.OrderTotal == decimal.Zero;
             if (!skipPaymentWorkflow)
             {
+                if(processPaymentRequest.PaymentMethodSystemName == "Credit Card")
+                {
+                    processPaymentRequest.PaymentMethodSystemName = "Payments.Manual";
+                }
+                else
+                {
+                    processPaymentRequest.PaymentMethodSystemName = "Payments.CheckMoneyOrder";
+                }
                 var paymentMethod =
                     _paymentService.LoadPaymentMethodBySystemName(processPaymentRequest.PaymentMethodSystemName);
                 if (paymentMethod == null)
@@ -1407,7 +1416,7 @@ namespace Nop.Services.Orders
                 }
                 else
                     //standard cart
-                    processPaymentResult = _paymentService.ProcessPayment(processPaymentRequest);
+                    processPaymentResult =  _paymentService.ProcessPayment(processPaymentRequest);
             }
             else
                 //payment is not required
@@ -1541,7 +1550,7 @@ namespace Nop.Services.Orders
         /// </summary>
         /// <param name="processPaymentRequest">Process payment request</param>
         /// <returns>Place order result</returns>
-        public virtual PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest)
+        public  virtual PlaceOrderResult PlaceOrder(ProcessPaymentRequest processPaymentRequest)
         {
             if (processPaymentRequest == null)
                 throw new ArgumentNullException(nameof(processPaymentRequest));
@@ -3071,11 +3080,13 @@ namespace Nop.Services.Orders
             var result = true;
 
             //check whether order total equals zero
-            var shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints);
-            if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
-                result = false;
+            //var shoppingCartTotalBase = _orderTotalCalculationService.GetShoppingCartTotal(cart, useRewardPoints: useRewardPoints);
+            //if (shoppingCartTotalBase.HasValue && shoppingCartTotalBase.Value == decimal.Zero)
+             //   result = false;
             return result;
         }
+
+        
 
         #endregion
     }

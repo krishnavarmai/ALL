@@ -3,8 +3,6 @@
   "ExternalAuth.Facebook",
   "Payments.CheckMoneyOrder",
   "Payments.Manual",
-  "Payments.Square",
-  "Payments.WorldpayUS",
   "Payments.PayPalStandard",
   "Pickup.PickupInStore",
   "Shipping.FixedByWeightByTotal",

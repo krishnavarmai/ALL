@@ -41,7 +41,7 @@
                             {
                                 <div class="payment-logo">
                                     <label for="paymentmethod_@(i)">
-                                        <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" />
+                                        <img src="@Url.Content("~/wwwroot/")+@paymentMethod.LogoUrl" alt="@paymentMethodName" />
                                     </label>
                                 </div>
                             }
