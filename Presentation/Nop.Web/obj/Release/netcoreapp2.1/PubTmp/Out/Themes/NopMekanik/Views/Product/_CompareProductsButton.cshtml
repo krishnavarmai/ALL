@@ -1,0 +1,19 @@
+﻿@model ProductDetailsModel
+@using Nop.Core
+@using Nop.Core.Domain.Orders
+@inject IStoreContext storeContext
+@{
+    var currentStore = storeContext.CurrentStore.Id;
+
+    var settingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Configuration.ISettingService>();
+    var quickViewEnabled = settingService.GetSettingByKey<bool>("NopMekanik.QuickView", false, currentStore, true);
+    var isQuickView = (quickViewEnabled && Context.Request.Query["quickview"] == "1").ToString().ToLowerInvariant();
+
+    var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
+}
+@if (Model.CompareProductsEnabled)
+{
+    <button type="button" class="button-2 add-to-compare-list-button" onclick="AjaxCart.addproducttocomparelist('@addtocomparelink', @isQuickView);return false;">
+        <span><i class="fas fa-exchange-alt"></i></span> @T("Products.Compare.AddToCompareList")
+    </button>
+}

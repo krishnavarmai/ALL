@@ -1,0 +1,178 @@
+﻿
+@using Nop.Core.Domain.Seo
+@inject Nop.Core.IWebHelper webHelper
+@inject SeoSettings seoSettings
+@{
+    var isPopup = ViewBag.IsPopup;
+    if (isPopup == null || isPopup == false)
+    {
+        Layout = "_ColumnsTwo";
+    }
+
+    //page class
+    Html.AppendPageCssClassParts("html-topic-page");
+}
+
+<link href="~/lib/fontAwesome/css/font-awesome.min.css" rel="stylesheet" />
+<style type="text/css">
+
+
+    .panel-title > a:before {
+        float: right !important;
+        font-family: FontAwesome;
+        content: "\f068";
+        padding-right: 5px;
+    }
+
+    .panel-title > a.collapsed:before {
+        float: right !important;
+        content: "\f067";
+    }
+
+    .panel-title > a:hover,
+    .panel-title > a:active,
+    .panel-title > a:focus {
+        text-decoration: none;
+    }
+    .panel-body{
+        padding-left:15px;
+    }
+</style>
+
+<div class="page topic-page" id="ph-topic">
+    <div class="page-title" id="ph-title">
+        <h1>Resources</h1>
+    </div>
+    <div class="page-body">
+        <p>
+            We’re here to support you. Find any files you are looking for, for expert
+            information and resources you need to succeed.
+        </p>
+
+        <div class="container">
+            <div class="row">
+                <div style="width:100%">
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingOne">
+                                        <h4 class="panel-title">
+                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                Brouchures
+                                            </a>
+                                        </h4>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                <div class="panel-body">
+                                    <div class="card-body">
+                                        Click the link to the CAD flies you are needing for your project.
+                                        <table>
+                                            <tr>
+                                                <td><a href="~/files/PCS_Website_MockUp.pdf" target="_blank">Mock Up</a></td>
+                                                <td><a href="#">Mold Base</a></td>
+                                                <td><a href="#">Mold Base</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="#">Leader Pins</a></td>
+                                                <td><a href="#">Leader Pins</a></td>
+                                                <td><a href="#">Leader Pins</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td><a href="#">Leader Pins</a></td>
+                                                <td><a href="#">Leader Pins</a></td>
+                                                <td><a href="#">Leader Pins</a></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="panel panel-default">
+                            <div class="card">
+                                <div class="card-header" id="headingOne">
+                                    <div class="panel-heading" role="tab" id="headingTwo">
+                                        <h4 class="panel-title">
+                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                CAD Files
+                                            </a>
+                                        </h4>
+
+                                    </div>
+                                    </div>
+                                </div>
+                                    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                        <div class="panel-body">
+                                            <div class="card-body">
+                                                Click the link to the CAD flies you are needing for your project.
+                                                <table>
+                                                    <tr>
+                                                        <td><a href="#">Mold Base</a></td>
+                                                        <td><a href="#">Mold Base</a></td>
+                                                        <td><a href="#">Mold Base</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="#">Leader Pins</a></td>
+                                                        <td><a href="#">Leader Pins</a></td>
+                                                        <td><a href="#">Leader Pins</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><a href="#">Leader Pins</a></td>
+                                                        <td><a href="#">Leader Pins</a></td>
+                                                        <td><a href="#">Leader Pins</a></td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        <div class="panel panel-default">
+                            <div class="card">
+                                <div class="card-header" id="headingOne">
+                                    <div class="panel-heading" role="tab" id="headingThree">
+                                        <h4 class="panel-title">
+                                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                Catalog
+                                            </a>
+                                        </h4>
+
+                                    </div>
+                                    </div>
+                                </div>
+                                            <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                                <div class="panel-body">
+                                                    <div class="card-body">
+                                                        Click the link to the CAD flies you are needing for your project.
+                                                        <table>
+                                                            <tr>
+                                                                <td><a href="#">Mold Base</a></td>
+                                                                <td><a href="#">Mold Base</a></td>
+                                                                <td><a href="#">Mold Base</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><a href="#">Leader Pins</a></td>
+                                                                <td><a href="#">Leader Pins</a></td>
+                                                                <td><a href="#">Leader Pins</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><a href="#">Leader Pins</a></td>
+                                                                <td><a href="#">Leader Pins</a></td>
+                                                                <td><a href="#">Leader Pins</a></td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                    </div>
+        </div>
+
+        
+    </div>
+</div>

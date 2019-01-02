@@ -30,6 +30,7 @@ namespace Nop.Web
 
         #endregion
 
+
         /// <summary>
         /// Add services to the application and configure service provider
         /// </summary>

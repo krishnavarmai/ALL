@@ -1,0 +1,96 @@
+﻿@using Nop.Core
+@using Nop.Services.Helpers
+@using Nop.Core.Domain.Common
+@using Nop.Web.Framework.UI
+@inject CommonSettings commonSettings
+@inject IWorkContext workContext
+@inject IThemeContext themeContext
+@inject IUserAgentHelper userAgentHelper
+@inject IStoreContext storeContext
+@inject Nop.Services.Localization.ILanguageService languageService
+
+@{
+    if (Context.Request.Query["quickview"] != "1")
+    {
+        var supportRtl = workContext.WorkingLanguage.Rtl;
+        var themeName = themeContext.WorkingThemeName;
+        var isIe8 = userAgentHelper.IsIe8();
+
+        <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+        <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+
+        var currentStore = storeContext.CurrentStore.Id;
+
+        var color = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Configuration.ISettingService>().GetSettingByKey<string>(
+        "NopMekanik.Color", "blue", currentStore, true).ToLowerInvariant();
+
+        //add main CSS file
+        Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/color/" + color + ".css");
+        //add browser specific CSS files
+        if (isIe8)
+        {
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/ie8.css");
+        }
+        //add main CSS file
+        if (supportRtl)
+        {
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/rtl/cdcart.rtl.css");
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/rtl/responsive.rtl.css");
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/rtl/styles.rtl.css");
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/rtl/owl.carousel.rtl.css");
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/rtl/bootstrap.rtl.css");
+        }
+        else
+        {
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/cdcart.css");
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/responsive.css");
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/styles.css");
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/owl.carousel.css");
+            Html.AppendCssFileParts($"~/Themes/{themeName}/Content/css/bootstrap.css");
+        }
+
+        //add jQuery UI css file
+        Html.AppendCssFileParts("~/lib/jquery-ui/jquery-ui-1.10.3/jquery-ui-themes/smoothness/jquery-ui-1.10.3.custom.min.css");
+
+        Html.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/public.ajaxcart.js");
+        Html.AppendScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/public.common.js");
+        //when jQuery migrate script logging is active you will see the log in the browser console
+        if (commonSettings.JqueryMigrateScriptLoggingActive)
+        {
+            Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate/jquery-migrate-3.0.1.js");
+        }
+        else
+        {
+            Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-migrate/jquery-migrate-3.0.1.min.js");
+        }
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-ui/jquery-ui-1.12.1.custom/jquery-ui.min.js");
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate.unobtrusive-v3.2.10/jquery.validate.unobtrusive.min.js");
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/lib/jquery-validate/jquery.validate-v1.17.0/jquery.validate.min.js");
+        //jQuery is the only js file in the head. if we decide to move it to the footer, then ensure that all inline scripts (with jQuery usage) with are also moved to the footer
+        //the issue that it's not possible in some cases (e.g. "Edit address", when Ajax request is made on one-page checkout)
+        Html.AppendScriptParts(ResourceLocation.Head, "~/lib/jquery/jquery-3.3.1.min.js");
+        Html.AppendScriptParts(ResourceLocation.Footer, "~/ShoppingCart.js");
+        Html.AddScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/cart.js");
+        Html.AddScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/owl.carousel.min.js");
+        if (supportRtl)
+        {
+            Html.AddScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/carousel.rtl.js");
+        }
+        else
+        {
+            Html.AddScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/carousel.js");
+        }
+        Html.AddScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/jquery.bpopup.min.js");
+        Html.AddScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/jquery.lazyload.min.js");
+        Html.AddScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/bootstrap.min.js");
+
+        <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+        
+        //add browser specific JS files
+        if (isIe8)
+        {
+            Html.AddScriptParts(ResourceLocation.Footer, "~/lib/selectivizr.min.js");
+            Html.AddScriptParts(ResourceLocation.Footer, "~/lib/respond.min.js");
+        }
+    }
+}

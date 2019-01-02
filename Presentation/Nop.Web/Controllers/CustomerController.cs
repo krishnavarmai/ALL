@@ -619,14 +619,16 @@ namespace Nop.Web.Controllers
                 var registrationResult = _customerRegistrationService.RegisterCustomer(registrationRequest);
                 if (registrationResult.Success)
                 {
-                    _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.BillingIdAttribute, Convert.ToDecimal(model.BillTo));
-                    var customerBillToMapping = new CustomerBillToMapping
+                    if (Convert.ToDecimal(model.BillTo)>0)
                     {
-                        BillToId = _addressService.GetBillToByAddressNo(Convert.ToDecimal(model.BillTo)),
-                        CustomerId = customer.Id
-                    };
-                    _addressService.InsertCustomerBillTo(customerBillToMapping);
-
+                        _genericAttributeService.SaveAttribute(customer, NopCustomerDefaults.BillingIdAttribute, Convert.ToDecimal(model.BillTo));
+                        var customerBillToMapping = new CustomerBillToMapping
+                        {
+                            BillToId = _addressService.GetBillToByAddressNo(Convert.ToDecimal(model.BillTo)),
+                            CustomerId = customer.Id
+                        };
+                        _addressService.InsertCustomerBillTo(customerBillToMapping);
+                    }
                     //properties
                     if (_dateTimeSettings.AllowCustomersToSetTimeZone)
                     {
@@ -963,12 +965,12 @@ namespace Nop.Web.Controllers
         }
         [HttpPost]
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual IActionResult InvoicesList(CustomerInvoicesListModel customerInvoicesListModel )
+        public virtual IActionResult InvoicesList(CustomerInvoicesListModel customerInvoicesListModel)
         {
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
 
-           // var customerInvoicesListModel = new CustomerInvoicesListModel();
+            // var customerInvoicesListModel = new CustomerInvoicesListModel();
             var model = _customerModelFactory.PrepareCustomerInvoicesListModel(customerInvoicesListModel)?.InvoicesList;
             //prepare model
 
@@ -999,9 +1001,9 @@ namespace Nop.Web.Controllers
 
         [HttpPost]
         [HttpsRequirement(SslRequirement.Yes)]
-        public virtual  IActionResult  SubmitPaymentList(CreditCardModel cardDetails)
+        public virtual IActionResult SubmitPaymentList(CreditCardModel cardDetails)
         {
-            
+
             if (!_workContext.CurrentCustomer.IsRegistered())
                 return Challenge();
             cardDetails.EmailId = _workContext.CurrentCustomer.Email;
@@ -1741,5 +1743,5 @@ namespace Nop.Web.Controllers
 
         #endregion
     }
-    
+
 }

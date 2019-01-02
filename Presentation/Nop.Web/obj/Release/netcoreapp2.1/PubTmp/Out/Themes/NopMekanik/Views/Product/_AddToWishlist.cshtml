@@ -1,0 +1,27 @@
+﻿@model ProductDetailsModel.AddToCartModel
+@using Nop.Core
+@using Nop.Core.Domain.Orders
+@inject IStoreContext storeContext
+
+@{
+    var currentStore = storeContext.CurrentStore.Id;
+
+    var settingService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Services.Configuration.ISettingService>();
+    var quickViewEnabled = settingService.GetSettingByKey<bool>("NopMekanik.quickview", false, currentStore, true);
+    var isQuickView = (quickViewEnabled && Context.Request.Query["quickview"] == "1").ToString().ToLowerInvariant();
+}
+@if (!Model.DisableWishlistButton)
+{
+    var addToWishlistText = "";
+    if (Model.UpdatedShoppingCartItemId > 0 && Model.UpdateShoppingCartItemType.HasValue && Model.UpdateShoppingCartItemType.Value == ShoppingCartType.Wishlist)
+    {
+        addToWishlistText = T("Products.Wishlist.AddToWishlist.Update").Text;
+    }
+    else
+    {
+        addToWishlistText = T("Products.Wishlist.AddToWishlist").Text;
+    }
+        <button type="button" class="button-2 add-to-wishlist-button" title="@T("ShoppingCart.AddToWishlist")" id="add-to-wishlist-button-@Model.ProductId" data-productid="@Model.ProductId" onclick="AjaxCart.addproducttocart_details('@Url.RouteUrl("AddProductToCart-Details", new {productId = Model.ProductId, shoppingCartTypeId = (int) ShoppingCartType.Wishlist})', '#product-details-form', @isQuickView);return false;">
+            <span><i class="fas fa-heart"></i></span> @addToWishlistText
+        </button>
+}

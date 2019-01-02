@@ -38,14 +38,21 @@ namespace Nop.Web.Validators.Customer
 
             RuleFor(x=>x.BillTo).Must((x, context) =>
             {
-                //does selected country have states?
-                var BillTo = addressService.GetBillToByAddressNo(Convert.ToDecimal(x.BillTo));
-                if (BillTo>0)
+                if (x.BillTo>0)
+                {
+                    //does selected country have states?
+                    var BillTo = addressService.GetBillToByAddressNo(Convert.ToDecimal(x.BillTo));
+                    if (BillTo > 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+                else
                 {
                     return true;
                 }
-
-                return false;
+                
             }).WithMessage("Bill To doesn't match with existing addresses.");
 
             RuleFor(x => x.Password).NotEmpty().WithMessage(localizationService.GetResource("Account.Fields.Password.Required"));

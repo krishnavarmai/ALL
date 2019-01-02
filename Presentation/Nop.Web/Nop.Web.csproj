@@ -61,6 +61,9 @@
     <Content Update="Views\Customer\Invoices.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
+    <Content Update="Views\Resources\ResourceDetails.cshtml">
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Update="Views\Shared\Components\CustomerHeaderLinks\Default.cshtml">
       <Pack>$(IncludeRazorContentInPack)</Pack>
     </Content>
