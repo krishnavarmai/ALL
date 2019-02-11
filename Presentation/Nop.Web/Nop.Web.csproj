@@ -38,6 +38,10 @@
 
     <!-- We copy the \Logs directory -->
     <Content Include="Logs\**" CopyToPublishDirectory="PreserveNewest" />
+    <None Remove="Themes\NopMekanik\Content\images\PCS_Cart.png" />
+    <None Remove="Themes\NopMekanik\Content\images\PCS_Facebook.png" />
+    <None Remove="Themes\NopMekanik\Content\images\PCS_LinkedIn.png" />
+    <None Remove="Themes\NopMekanik\Content\images\PCS_YouTube.png" />
 
     <None Update="Areas\Admin\sitemap.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

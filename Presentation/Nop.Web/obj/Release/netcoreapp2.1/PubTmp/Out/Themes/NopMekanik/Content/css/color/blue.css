@@ -79,8 +79,8 @@ tr a:hover, .breadcrumb a:hover, .product .name a:hover, .view-all a:hover {
 
 .header-menu {
     background-color: #008C31;
-    margin-left: -15px;
-    margin-right: -15px;
+    /*margin-left: -15px;
+    margin-right: -15px;*/
 }
 
 .search-box .search-box-button, .product .name a, .product-review-item .review-info a, .product-review-helpfulness .vote {
@@ -127,6 +127,7 @@ tr a:hover, .breadcrumb a:hover, .product .name a:hover, .view-all a:hover {
 
 .home-grey-sec #home-slider-widget .topic-block-title {
     background: #444041;
+    margin: 15px;
 }
 
     .home-grey-sec #home-slider-widget .topic-block-title h2 {

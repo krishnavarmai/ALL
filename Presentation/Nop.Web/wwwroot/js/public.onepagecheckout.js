@@ -118,7 +118,7 @@ var Billing = {
 
     newAddress: function (isNew) {
         if (isNew) {
-            this.resetSelectedAddress();
+            //this.resetSelectedAddress();
             $('#billing-new-address-form').show();
         } else {
             $('#billing-new-address-form').hide();
@@ -196,7 +196,7 @@ var Shipping = {
 
     newAddress: function (isNew) {
         if (isNew) {
-            this.resetSelectedAddress();
+            //this.resetSelectedAddress();
             $('#shipping-new-address-form').show();
         } else {
             $('#shipping-new-address-form').hide();

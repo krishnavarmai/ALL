@@ -9,9 +9,11 @@
             @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderSelectors })
         </div>
         <div class="header-links-wrapper">
-            @await Component.InvokeAsync("HeaderLinks")
-            @await Component.InvokeAsync("FlyoutShoppingCart")
-        </div>
+            <div class="row">
+                @await Component.InvokeAsync("HeaderLinks")
+                @await Component.InvokeAsync("FlyoutShoppingCart")
+             </div>
+            </div>
     </div>
     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderMiddle })
     <div class="header-lower">

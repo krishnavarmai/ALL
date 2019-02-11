@@ -389,15 +389,15 @@ namespace Nop.Web.Factories
             if (addressSettings.CountryEnabled && loadCountries != null)
             {
                 var countries = loadCountries();
-
-                if (_addressSettings.PreselectCountryIfOnlyOne && countries.Count == 1)
-                {
-                    model.CountryId = countries[0].Id;
-                }
-                else
-                {
-                    model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
-                }
+                model.CountryId = 1;
+                //if (_addressSettings.PreselectCountryIfOnlyOne && countries.Count == 1)
+                //{
+                //    model.CountryId = countries[0].Id;
+                //}
+                //else
+                //{
+                //    model.AvailableCountries.Add(new SelectListItem { Text = _localizationService.GetResource("Address.SelectCountry"), Value = "0" });
+                //}
 
                 foreach (var c in countries)
                 {
@@ -413,7 +413,7 @@ namespace Nop.Web.Factories
                 {
                     var languageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
                     var states = _stateProvinceService
-                        .GetStateProvincesByCountryId(model.CountryId.HasValue ? model.CountryId.Value : 0, languageId)
+                        .GetStateProvincesByCountryId(model.CountryId.HasValue ? model.CountryId.Value : 1, languageId)
                         .ToList();
                     if (states.Any())
                     {
@@ -554,7 +554,7 @@ namespace Nop.Web.Factories
                 {
                     var languageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
                     var states = _stateProvinceService
-                        .GetStateProvincesByCountryId(model.CountryId.HasValue ? model.CountryId.Value : 0, languageId)
+                        .GetStateProvincesByCountryId(model.CountryId.HasValue ? model.CountryId.Value : 1, languageId)
                         .ToList();
                     if (states.Any())
                     {
@@ -695,7 +695,7 @@ namespace Nop.Web.Factories
                 {
                     var languageId = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Id;
                     var states = _stateProvinceService
-                        .GetStateProvincesByCountryId(model.CountryId.HasValue ? model.CountryId.Value : 0, languageId)
+                        .GetStateProvincesByCountryId(model.CountryId.HasValue ? model.CountryId.Value : 1, languageId)
                         .ToList();
                     if (states.Any())
                     {

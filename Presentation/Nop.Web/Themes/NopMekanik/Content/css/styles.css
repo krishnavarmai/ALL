@@ -99,7 +99,7 @@ body {
 
 .body-background {
     /*background-image: url("../images/parallax-background.jpg");*/
-    background-color:#FFF;
+    background-color: #FFF;
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
@@ -449,7 +449,7 @@ label, label + * {
 }
 
 table.cart td.hidden-md-down {
-    background: #f0f0f0;
+    /*background: #f0f0f0;*/
 }
 
 .forum-table th.replies,
@@ -1000,7 +1000,7 @@ table.cart td.hidden-md-down {
 .header-upper {
     position: relative;
     /*background: rgba(0,0,0,0.25);*/
-    background-color:#CCCCCC;
+    background-color: #CCCCCC;
 }
 
     .header-upper.inactive {
@@ -1077,7 +1077,7 @@ table.cart td.hidden-md-down {
 }
 
 .header-links {
-    float:left;
+    float: left;
 }
 
     .header-links ul {
@@ -1152,8 +1152,8 @@ table.cart td.hidden-md-down {
 
 .flyout-cart .cd-img-replace {
     vertical-align: middle;
-    width:100%;
-    float:left;
+    width: 100%;
+    float: left;
 }
 
 .flyout-cart .cd-img-replace, .flyout-cart .toggle-info {
@@ -1169,7 +1169,7 @@ table.cart td.hidden-md-down {
     color: #555;
     position: absolute;
     /*top: 6px;*/
-    height:100%;
+    height: 100%;
     left: 0px;
 }
 
@@ -1390,6 +1390,7 @@ table.cart td.hidden-md-down {
 .slider-wrapper.theme-custom {
     margin: 0 !important;
     max-width: 100% !important;
+   
 }
 
 .theme-custom .nivo-controlNav a {
@@ -1398,15 +1399,15 @@ table.cart td.hidden-md-down {
 
 .home-grey-sec {
     background: #DEDEDE;
-    padding: 10px 0 0;
+    /*padding: 10px 0 0;*/
     margin-bottom: 10px;
     margin-top: -35px;
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
 }
 
     .home-grey-sec #bottom-widgets {
-        margin-top: 10px;
-        /*border-top-left-radius: 5px;
+        /*margin-top: 10px;
+        border-top-left-radius: 5px;
         border-top-right-radius: 5px;*/
     }
 
@@ -1592,7 +1593,11 @@ table.cart td.hidden-md-down {
     }
 
     .follow-us .social .facebook a {
-        background-position: 0 0;
+        display: block;
+        width: 55px;
+        height: 55px;
+        background: url(../images/PCS_Facebook.png) no-repeat;
+        background-size: cover;
     }
 
     .follow-us .social .twitter a {
@@ -1604,9 +1609,21 @@ table.cart td.hidden-md-down {
     }
 
     .follow-us .social .youtube a {
-        background-position: -114px 0;
+        display: block;
+        width: 55px;
+        height: 55px;
+        background: url(../images/PCS_YouTube.png) no-repeat;
+        background-size: cover;
     }
 
+    .follow-us .social .linkedin a {
+        display: block;
+        width: 55px;
+        height: 55px;
+        background: url(../images/PCS_LinkedIn.png) no-repeat;
+        background-size: cover;
+       
+    }
     .follow-us .social .google-plus a {
         background-position: -152px 0;
     }
@@ -1734,14 +1751,14 @@ table.cart td.hidden-md-down {
     margin-bottom: 30px;
 }
 
-    .sitemap-page .block.block-general-sitemap {
-        border-radius: 4px 4px 0 0;
-    }
+.sitemap-page .block.block-general-sitemap {
+    border-radius: 4px 4px 0 0;
+}
 
-    .sitemap-page .block:last-child {
-        border-radius: 0 0 4px 4px;
-        border-bottom: 1px solid #eee;
-    }
+.sitemap-page .block:last-child {
+    border-radius: 0 0 4px 4px;
+    border-bottom: 1px solid #eee;
+}
 
 .block.block-recently-viewed-products, .block.block-popular-tags, .block.block-poll {
     margin-top: 20px;
@@ -3373,9 +3390,9 @@ table.cart td.hidden-md-down {
     margin: 0 3px;
 }
 
-    .write-review .captcha-box {
-        margin: 15px 0 0;
-    }
+.write-review .captcha-box {
+    margin: 15px 0 0;
+}
 
 .product-reviews-page .result,
 .product-reviews-page .message-error {
@@ -3501,15 +3518,15 @@ table.cart td.hidden-md-down {
         line-height: 20px;
     }
 
-    .wishlist-page .share-info span {
-        display: block;
-        margin: 0 0 5px;
-    }
+.wishlist-page .share-info span {
+    display: block;
+    margin: 0 0 5px;
+}
 
-    .wishlist-page .share-info a {
-        font-weight: 500;
-        color: #343434;
-    }
+.wishlist-page .share-info a {
+    font-weight: 500;
+    color: #343434;
+}
 
 .wishlist-page .no-data {
     margin: 25px 0 0;
@@ -6148,3 +6165,13 @@ pre {
         .totop a:hover {
             text-decoration: none;
         }
+
+.shoppingcartMekanik {
+    background: url(../images/PCS_Cart.png) center;
+    width: 55px;
+    background-size: cover;
+    height: 27px;
+    position: relative;
+    float: left;
+    margin-right: -24px;
+}

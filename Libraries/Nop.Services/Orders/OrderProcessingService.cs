@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core;
+using Nop.Core.Configuration;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Common;
 using Nop.Core.Domain.Customers;
@@ -31,6 +32,7 @@ using Nop.Services.Security;
 using Nop.Services.Shipping;
 using Nop.Services.Tax;
 using Nop.Services.Vendors;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Nop.Services.Orders
 {
@@ -83,7 +85,7 @@ namespace Nop.Services.Orders
         private readonly ShippingSettings _shippingSettings;
         private readonly TaxSettings _taxSettings;
         private readonly IAddressService _addressService;
-
+        private readonly NopConfig _nopConfig;
         #endregion
 
         #region Ctor
@@ -129,7 +131,8 @@ namespace Nop.Services.Orders
             PaymentSettings paymentSettings,
             RewardPointsSettings rewardPointsSettings,
             ShippingSettings shippingSettings,
-            TaxSettings taxSettings)
+            TaxSettings taxSettings,
+            NopConfig nopConfig)
         {
             this._currencySettings = currencySettings;
             this._affiliateService = affiliateService;
@@ -173,6 +176,7 @@ namespace Nop.Services.Orders
             this._shippingSettings = shippingSettings;
             this._taxSettings = taxSettings;
             this._addressService = addressService;
+            this._nopConfig = nopConfig;
         }
 
         #endregion
@@ -442,8 +446,12 @@ namespace Nop.Services.Orders
 
             if (!CommonHelper.IsValidEmail(details.Customer.BillingAddress.Email))
                 throw new NopException("Email is not valid");
+            
+            if (details.Customer.BillingId!=null)
+                details.BillTo = _addressService.GetBillToById(details.Customer.BillingId.Value);
+            else
+                details.BillTo = _addressService.GetBillToById(_nopConfig.GuestBillTo);
 
-            details.BillTo = _addressService.GetBillToById(details.Customer.BillingId.Value);
             if (details.BillTo.Country != null && !details.BillTo.Country.AllowsBilling)
                 throw new NopException($"Country '{details.BillTo.Country.Name}' is not allowed for billing");
 
@@ -534,18 +542,25 @@ namespace Nop.Services.Orders
                 }
                 else
                 {
-                    details.ShipTo = this._addressService.GetShipToById(details.Customer.ShippingId.Value);
+                    if (details.Customer.ShippingId != null)
+                    {
+                        details.ShipTo = this._addressService.GetShipToById(details.Customer.ShippingId.Value);
 
-                    if (details.ShipTo == null)
-                        throw new NopException("Shipping address is not provided");
+                        if (details.ShipTo == null)
+                            throw new NopException("Shipping address is not provided");
 
-                    if (!CommonHelper.IsValidEmail(details.ShipTo.Email))
-                        throw new NopException("Email is not valid");
+                        if (!CommonHelper.IsValidEmail(details.ShipTo.Email))
+                            throw new NopException("Email is not valid");
 
-                    //clone shipping address
-                    details.ShipTo = this._addressService.GetShipToById(details.Customer.ShippingId.Value);
-                    if (details.ShipTo.Country != null && !details.ShipTo.Country.AllowsShipping)
-                        throw new NopException($"Country '{details.ShipTo.Country.Name}' is not allowed for shipping");
+                        //clone shipping address
+                        details.ShipTo = this._addressService.GetShipToById(details.Customer.ShippingId.Value);
+                        if (details.ShipTo.Country != null && !details.ShipTo.Country.AllowsShipping)
+                            throw new NopException($"Country '{details.ShipTo.Country.Name}' is not allowed for shipping");
+                    }
+                    else
+                    {
+                        details.ShippingAddress = this._addressService.GetAddressById(details.Customer.ShippingAddressId.Value);
+                    }
                 }
 
                 var shippingOption = _genericAttributeService.GetAttribute<ShippingOption>(details.Customer,
@@ -761,8 +776,8 @@ namespace Nop.Services.Orders
                 StoreId = processPaymentRequest.StoreId,
                 OrderGuid = processPaymentRequest.OrderGuid,
                 CustomerId = details.Customer.Id,
-                BillingId = details.BillTo.Id,
-                ShippingId = details.ShipTo.Id,
+                BillingId = details.BillTo?.Id,
+                ShippingId = details.ShipTo?.Id,
                 PO_RefNo = processPaymentRequest.PO_RefNo,
                 CustomerLanguageId = details.CustomerLanguage.Id,
                 CustomerTaxDisplayType = details.CustomerTaxDisplayType,
@@ -803,6 +818,8 @@ namespace Nop.Services.Orders
                 SubscriptionTransactionId = processPaymentResult.SubscriptionTransactionId,
                 PaymentStatus = processPaymentResult.NewPaymentStatus,
                 PaidDateUtc = null,
+                BillingAddressId = details.BillingAddress?.Id,
+                ShippingAddressId = details.ShippingAddress?.Id,
                 BillingAddress = details.BillingAddress,
                 ShippingAddress = details.ShippingAddress,
                 BillTo = details.BillTo,

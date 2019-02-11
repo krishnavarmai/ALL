@@ -16,8 +16,8 @@
         var themeName = themeContext.WorkingThemeName;
         var isIe8 = userAgentHelper.IsIe8();
 
-        <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
-        <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link href="//use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
 
         var currentStore = storeContext.CurrentStore.Id;
 
@@ -84,8 +84,8 @@
         Html.AddScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/jquery.lazyload.min.js");
         Html.AddScriptParts(ResourceLocation.Footer, $"~/Themes/{themeName}/Content/js/bootstrap.min.js");
 
-        <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
-        
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+
         //add browser specific JS files
         if (isIe8)
         {
@@ -93,4 +93,5 @@
             Html.AddScriptParts(ResourceLocation.Footer, "~/lib/respond.min.js");
         }
     }
+   <input type="hidden" id="hdnbaseURL" value="@Url.Content("~")" />
 }

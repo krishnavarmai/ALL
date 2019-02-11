@@ -1288,7 +1288,6 @@
     .header-menu > ul {
         display: block !important; /* prevents toggle display:none on resize */
         font-size: 0;
-        
     }
 
         .header-menu > ul.mobile {
@@ -1423,6 +1422,9 @@
 
     .home-grey-sec #home-slider-widget {
         margin-top: 0;
+    }
+    .topic-block {
+        margin: 0px 0px 25px -30px;
     }
 
     home-grey-sec {
@@ -1901,6 +1903,7 @@
 
 @media all and (min-width: 1200px) {
 
+    
 
     /*** GLOBAL STYLES ***/
     .inputs label {

@@ -26,21 +26,21 @@ namespace Nop.Web.Validators.Common
             RuleFor(x => x.Email)
                 .EmailAddress()
                 .WithMessage(localizationService.GetResource("Common.WrongEmail"));
-            if (addressSettings.CountryEnabled)
-            {
-                RuleFor(x => x.CountryId)
-                    .NotNull()
-                    .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
-                RuleFor(x => x.CountryId)
-                    .NotEqual(0)
-                    .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
-            }
+            //if (addressSettings.CountryEnabled)
+            //{
+            //    RuleFor(x => x.CountryId)
+            //        .NotNull()
+            //        .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
+            //    RuleFor(x => x.CountryId)
+            //        .NotEqual(0)
+            //        .WithMessage(localizationService.GetResource("Address.Fields.Country.Required"));
+            //}
             if (addressSettings.CountryEnabled && addressSettings.StateProvinceEnabled)
             {
                 RuleFor(x => x.StateProvinceId).Must((x, context) =>
                 {
                     //does selected country has states?
-                    var countryId = x.CountryId.HasValue ? x.CountryId.Value : 0;
+                    var countryId = x.CountryId.HasValue ? x.CountryId.Value : 1;
                     var hasStates = stateProvinceService.GetStateProvincesByCountryId(countryId).Any();
 
                     if (hasStates)

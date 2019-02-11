@@ -19,4 +19,3 @@ C:\DEV\PCSWebsite\nopWeb\src\Libraries\Nop.Core\obj\Debug\netcoreapp2.1\Nop.Core
 C:\DEV\PCSWebsite\nopWeb\src\Libraries\Nop.Core\obj\Debug\netcoreapp2.1\Nop.Core.AssemblyInfo.cs
 C:\DEV\PCSWebsite\nopWeb\src\Libraries\Nop.Core\obj\Debug\netcoreapp2.1\Nop.Core.dll
 C:\DEV\PCSWebsite\nopWeb\src\Libraries\Nop.Core\obj\Debug\netcoreapp2.1\Nop.Core.pdb
-C:\DEV\PCSWebsite\nopWeb\src\Libraries\Nop.Core\obj\Debug\netcoreapp2.1\Nop.Core.csprojAssemblyReference.cache

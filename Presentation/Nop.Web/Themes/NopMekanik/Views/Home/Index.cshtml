@@ -9,15 +9,16 @@
     <div class="home-grey-sec">
         <div class="container">
             <div class="row">
-                <div class="col-lg-9">
+                <div class="col-lg-9" >
                     @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HomePageTop })
                 </div>
                 <div class="col-lg-3" id="home-slider-widget">
+                    @*style="padding-left:0px !important;"*@
                     @await Component.InvokeAsync("TopicBlock", new { systemName = "home-slider-widget" })
                 </div>
             </div>
-            <div id="bottom-widgets">
-                <div class="row">
+            <div id="bottom-widgets" style="padding-left:0px !important;padding-right:0px !important">
+                <div class="row" style="padding-left:0px !important;padding-right:0px !important">
                     <div class="col-md-4">
                         @await Component.InvokeAsync("TopicBlock", new { systemName = "home-widget-1" })
                     </div>

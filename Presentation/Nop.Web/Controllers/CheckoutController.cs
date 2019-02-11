@@ -1447,6 +1447,9 @@ namespace Nop.Web.Controllers
                         _workContext.CurrentCustomer.CustomerAddressMappings.Add(new CustomerAddressMapping { Address = address });
                     }
                     _workContext.CurrentCustomer.ShippingAddress = address;
+                    _workContext.CurrentCustomer.ShipTo = null;
+                    _workContext.CurrentCustomer.ShippingId = null;
+                    _workContext.CurrentCustomer.ShippingAddressId = address.Id;
                     _customerService.UpdateCustomer(_workContext.CurrentCustomer);
                 }
 

@@ -6,13 +6,12 @@
     //log('this is Sitefinity...');
     //log('host: ' + location.host);
     function handleMessage(event) {
-        debugger;
         //if (event.origin == originTwo) {
         if (!windowTwo) windowTwo = event.source;
         var d = JSON.parse(event.data);
         if (!d) return false;
         for (var i = 0; i < d.length; i++) {
-            var url = "/addproductnametocart/catalog/" + d[i].ItemId + "/1/" + d[i].Quantity;
+            var url = $("#hdnbaseURL").val() + "/addproductnametocart/catalog/" + d[i].ItemId + "/1/" + d[i].Quantity;
             AjaxCart.addProductNameToCart_Catalog(url);
         }
         //ECOMM.addItemsToCart(d);

@@ -18,10 +18,6 @@ C:\DEV\nopCommerce-develop\src\Presentation\Nop.Web\bin\Debug\netcoreapp2.1\Nop.
 C:\DEV\nopCommerce-develop\src\Presentation\Nop.Web\bin\Debug\netcoreapp2.1\Nop.Web.runtimeconfig.dev.json
 C:\DEV\nopCommerce-develop\src\Presentation\Nop.Web\bin\Debug\netcoreapp2.1\Nop.Web.pdb
 C:\DEV\nopCommerce-develop\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.csproj.CopyComplete
-C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.csprojAssemblyReference.cache
-C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.csproj.CoreCompileInputs.cache
-C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.AssemblyInfoInputs.cache
-C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.AssemblyInfo.cs
 C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\bin\Debug\netcoreapp2.1\Nop.Web.deps.json
 C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\bin\Debug\netcoreapp2.1\Nop.Web.runtimeconfig.json
 C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\bin\Debug\netcoreapp2.1\Nop.Web.runtimeconfig.dev.json
@@ -35,6 +31,10 @@ C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\bin\Debug\netcoreapp2.1\Nop.Co
 C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\bin\Debug\netcoreapp2.1\Nop.Data.pdb
 C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\bin\Debug\netcoreapp2.1\Nop.Services.pdb
 C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\bin\Debug\netcoreapp2.1\Nop.Web.Framework.pdb
+C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.csprojAssemblyReference.cache
+C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.csproj.CoreCompileInputs.cache
+C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.AssemblyInfoInputs.cache
+C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.AssemblyInfo.cs
 C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.csproj.CopyComplete
 C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.dll
 C:\DEV\PCSWebsite\nopWeb\src\Presentation\Nop.Web\obj\Debug\netcoreapp2.1\Nop.Web.pdb

@@ -97,5 +97,7 @@ namespace Nop.Core.Configuration
         public bool UseSessionStateTempDataProvider { get; set; }
 
         public string JDEStatusCodes { get; set; }
+
+        public int GuestBillTo { get; set; }
     }
 }

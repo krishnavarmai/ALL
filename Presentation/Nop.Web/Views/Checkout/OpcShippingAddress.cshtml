@@ -192,7 +192,7 @@
                     <label for="shipping-address-select">@T("Checkout.SelectShippingAddressOrEnterNewOne")</label>
                     <div>
                         <select name="shipping_address_id" id="shipping-address-select" class="address-select"
-                                title="" onchange="Shipping.newAddress(!this.value)">
+                                title="" onchange="Shipping.newAddress(!this.value || this.value==0)">
                             @foreach (var address in Model.ExistingAddresses)
                             {
                                 var addressLine = "";
@@ -224,6 +224,7 @@
                                 }
                                 //how should we render "FormattedCustomAddressAttributes" here?
                                 <option value="@(address.Id)">@(addressLine)</option>
+                                <option value="0">New Address</option>
                             }
                             @*<option value="" selected="@Model.NewAddressPreselected">@T("Checkout.NewAddress")</option>*@
                         </select>

@@ -42,9 +42,10 @@
                         <div class="method-name">
                             @if (!string.IsNullOrEmpty(paymentMethod.LogoUrl))
                             {
+                                var payurl = @paymentMethod.LogoUrl;
                                 <div class="payment-logo">
                                     <label for="paymentmethod_@(i)">
-                                        <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" />
+                                        <img src="@payurl" alt="@paymentMethodName" />
                                     </label>
                                 </div>
                             }
