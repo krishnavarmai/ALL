@@ -50,6 +50,7 @@
 <html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)" @(this.ShouldUseRtlTheme() ? Html.Raw(" dir=\"rtl\"") : null) @Html.NopPageCssClasses()>
 <head>
     <title>@Html.NopTitle()</title>
+    <meta name="robots" content="noindex">
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     <meta name="description" content="@(Html.NopMetaDescription())" />
     <meta name="keywords" content="@(Html.NopMetaKeywords())" />

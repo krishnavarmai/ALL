@@ -94,16 +94,17 @@
 }
 <!DOCTYPE html>
 <html lang="@languageService.GetTwoLetterIsoLanguageName(workContext.WorkingLanguage)"@(supportRtl ? Html.Raw(" dir=\"rtl\"") : null)>
-    <head>
-        <title>@adminPageTitle</title>
-        <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        @*Google Font*@
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-        @Html.NopHeadCustom()
-        @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
-        @Html.NopScripts(this.Url, ResourceLocation.Head, false)
-    </head>
+<head>
+    <title>@adminPageTitle</title>
+    <meta name="robots" content="noindex">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    @*Google Font*@
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    @Html.NopHeadCustom()
+    @Html.NopCssFiles(this.Url, ResourceLocation.Head, false)
+    @Html.NopScripts(this.Url, ResourceLocation.Head, false)
+</head>
     <body class="hold-transition skin-blue sidebar-mini @if (hideSidebar) 
                                                     {<text>sidebar-collapse</text>}">
         <div class="throbber">
